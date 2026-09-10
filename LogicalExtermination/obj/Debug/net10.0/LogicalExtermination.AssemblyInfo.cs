@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LogicalExtermination")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e20e0dfae5b0dc1af286a2eb0829eaf7a454e8db")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ed5e04a183acb2ab6037cad1b28cb5be4437a046")]
 [assembly: System.Reflection.AssemblyProductAttribute("LogicalExtermination")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LogicalExtermination")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
