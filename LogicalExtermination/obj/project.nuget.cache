@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "EedrBV7mSUU=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\BraggD\\Documents\\GitHub\\CSharp-Project-Fall-2026\\LogicalExtermination\\LogicalExtermination.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\BraggD\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.12\\microsoft.aspnetcore.app.internal.assets.10.0.12.nupkg.sha512"
+  ],
+  "logs": []
+}
