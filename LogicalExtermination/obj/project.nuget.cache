@@ -1,10 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "EedrBV7mSUU=",
+  "dgSpecHash": "VWuQktY5wjw=",
   "success": true,
   "projectFilePath": "C:\\Users\\BraggD\\Documents\\GitHub\\CSharp-Project-Fall-2026\\LogicalExtermination\\LogicalExtermination.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\BraggD\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.12\\microsoft.aspnetcore.app.internal.assets.10.0.12.nupkg.sha512"
+    "C:\\Users\\BraggD\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.12\\microsoft.aspnetcore.app.internal.assets.10.0.12.nupkg.sha512",
+    "C:\\Users\\BraggD\\.nuget\\packages\\microsoft.extensions.ai\\10.10.0\\microsoft.extensions.ai.10.10.0.nupkg.sha512",
+    "C:\\Users\\BraggD\\.nuget\\packages\\microsoft.extensions.ai.abstractions\\10.10.0\\microsoft.extensions.ai.abstractions.10.10.0.nupkg.sha512",
+    "C:\\Users\\BraggD\\.nuget\\packages\\ollamasharp\\5.4.30\\ollamasharp.5.4.30.nupkg.sha512",
+    "C:\\Users\\BraggD\\.nuget\\packages\\system.numerics.tensors\\10.0.12\\system.numerics.tensors.10.0.12.nupkg.sha512"
   ],
   "logs": []
 }

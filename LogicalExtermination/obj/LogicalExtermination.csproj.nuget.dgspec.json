@@ -58,6 +58,14 @@
               "target": "Package",
               "version": "[10.0.12, )",
               "autoReferenced": true
+            },
+            "Microsoft.Extensions.AI": {
+              "target": "Package",
+              "version": "[10.10.0, )"
+            },
+            "OllamaSharp": {
+              "target": "Package",
+              "version": "[5.4.30, )"
             }
           },
           "imports": [
