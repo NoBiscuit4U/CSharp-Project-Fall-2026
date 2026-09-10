@@ -22,9 +22,12 @@ namespace Backend{
 
         public async Task test(){
             var chat = new Chat(ollama);
+            string returnval="";
 
-            await foreach(var answertoken in chat.SendAsync("This is a test"))
-                Console.WriteLine(answertoken);
+            await foreach (var answerToken in chat.SendAsync("Generate a simple programming error problem."))
+                returnval+=answerToken;
+
+            Console.WriteLine(returnval);
         }
     }
 }
