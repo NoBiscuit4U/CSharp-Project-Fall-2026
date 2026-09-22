@@ -24,7 +24,19 @@ namespace Backend{
             var chat = new Chat(ollama);
             string returnval="";
 
-            await foreach (var answerToken in chat.SendAsync("Generate a simple programming error problem."))
+            await foreach (var answerToken in chat.SendAsync(
+            """
+                You are a Programming Problem Generator. Your goals is to create problems based off of a difficulty score, creating a problem, and then respective
+                code block to complete the problem.
+
+                **STRUCTURE**
+                - JSON
+                - EXAMPLE:
+                {
+                problem_statement
+                }
+
+            """))
                 returnval+=answerToken;
 
             Console.WriteLine(returnval);
