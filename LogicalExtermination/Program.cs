@@ -1,3 +1,4 @@
+using Backend;
 using LogicalExtermination.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,4 +24,8 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.Run();
+//app.Run();
+
+OllamaManager ollama=new OllamaManager(Constants.OllamaConstants.gemma2b);
+Console.WriteLine("INIT");
+await ollama.test();
