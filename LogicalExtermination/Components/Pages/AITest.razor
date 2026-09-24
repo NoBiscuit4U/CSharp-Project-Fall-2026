@@ -5,20 +5,28 @@
 
 <h1>AI Test</h1>
 
-@if (result == null)
+@if (output == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <p role="status">@result</p>
+    <p role="status">@problem</p>
+    <ul>
+        @foreach (var block in codeblocks)
+        {
+            <li>@block</li>
+        }
+    </ul>
 }
 
 <button class="btn btn-primary" @onclick="GetTest">Reload</button>
 
 @code {
     private Backend.OllamaManager ollama = new Backend.OllamaManager(Backend.Constants.OllamaConstants.gemma2b);
-    private string result = null;
+    private Dictionary<string,object> output = null;
+    private string problem = null;
+    private List<string> codeblocks = null;
     protected override async Task OnInitializedAsync()
     {
         await GetTest();
@@ -26,6 +34,9 @@ else
 
     private async Task GetTest()
     {
-        result = null;
+        output = null;
+        output = await ollama.GenerateProblemDynamic();
+        problem = output["problem"].ToString();
+        codeblocks = output["codeblocks"] as List<string>;
     }
 }
