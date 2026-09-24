@@ -28,4 +28,4 @@ app.MapRazorComponents<App>()
 
 OllamaManager ollama=new OllamaManager(Constants.OllamaConstants.gemma2b);
 Console.WriteLine("INIT");
-await ollama.test();
+await ollama.GenerateProblemDynamic();
