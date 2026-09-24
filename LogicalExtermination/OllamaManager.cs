@@ -4,6 +4,8 @@ using OllamaSharp;
 using System.Text.Json;
 using System.Collections;
 
+delegate Dictionary<string,object> Translate(string json);
+
 namespace Backend{
     class OllamaManager{
         private string model;
@@ -11,9 +13,12 @@ namespace Backend{
 
         private double difficultyScore=100;
 
+        private Translate translator;
+
         public OllamaManager(string model){
             this.model = model;
-
+            translator=new Translate(TranslateJSON);
+            
             Initalize();
         }
 
@@ -24,8 +29,30 @@ namespace Backend{
             ollama.SelectedModel=this.model;
         }
 
+        private static string Clean(string json){
+            string cleanedJson=json.Trim();
+
+            if (cleanedJson.StartsWith("```json"))
+            {
+                cleanedJson = cleanedJson.Substring(7);
+            }
+            else if (cleanedJson.StartsWith("```"))
+            {
+                cleanedJson = cleanedJson.Substring(3); 
+            }
+
+            if (cleanedJson.EndsWith("```"))
+            {
+                cleanedJson = cleanedJson.Substring(0, cleanedJson.Length - 3);
+            }
+
+            cleanedJson = cleanedJson.Trim();
+
+            return cleanedJson;
+        }
+
         private Dictionary<string,object> TranslateJSON(string json){
-            return JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+            return JsonSerializer.Deserialize<Dictionary<string, object>>(Clean(json));
         }
 
         public async Task<Dictionary<string,object>> GenerateProblemDynamic(){
@@ -64,12 +91,12 @@ namespace Backend{
                 **OUTPUT**
                 - Only Output the JSON
                     - Do not provide any other information or discuss the output.
-                    - do not output json
+                - CRITICAL: Return ONLY raw JSON. Do not wrap the JSON in markdown code blocks, do not use ```json, and do not include any surrounding text.
 
             """))
                 output+=answerToken;
 
-            return TranslateJSON(output);
+            return translator(output);
         }
     }
 }
