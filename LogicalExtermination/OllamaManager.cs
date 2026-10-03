@@ -1,102 +1,67 @@
-using System;
-using Microsoft.Extensions.AI;
 using OllamaSharp;
-using System.Text.Json;
-using System.Collections;
+using System;
+using System.Runtime.InteropServices;
+using System.Collections.Generic;
+using Microsoft.Extensions.AI;
 
-delegate Dictionary<string,object> Translate(string json);
+public record ProblemResponse(){
+    public required string Problem {get;set;}=null;
+    public required List<string> Codeblocks {get;set;}=null;
+}
+
+public delegate ProblemResponse ProcessResponse(ProblemResponse response);
 
 namespace Backend{
-    class OllamaManager{
-        private string model;
+    sealed class OllamaManager{
+        private string Model;
         private OllamaApiClient ollama;
 
-        private double difficultyScore=100;
+        private ProcessResponse processResponse;
 
-        private Translate translator;
+        public OllamaManager(string Model){
+            this.Model=Model;
 
-        public OllamaManager(string model){
-            this.model = model;
-            translator=new Translate(TranslateJSON);
-            
+            processResponse=new ProcessResponse(CheckForNull);
+            processResponse+=new ProcessResponse(RandomizeBlocks);
+
             Initalize();
         }
 
         private void Initalize(){
-            var uri = new Uri("http://localhost:11434");
+            var uri=new Uri("http://localhost:11434");
 
-            ollama = new OllamaApiClient(uri);
-            ollama.SelectedModel=this.model;
+            ollama=new OllamaApiClient(uri);
+            ollama.SelectedModel=Model;
         }
 
-        private static string Clean(string json){
-            string cleanedJson=json.Trim();
-
-            if (cleanedJson.StartsWith("```json"))
-            {
-                cleanedJson = cleanedJson.Substring(7);
-            }
-            else if (cleanedJson.StartsWith("```"))
-            {
-                cleanedJson = cleanedJson.Substring(3); 
-            }
-
-            if (cleanedJson.EndsWith("```"))
-            {
-                cleanedJson = cleanedJson.Substring(0, cleanedJson.Length - 3);
-            }
-
-            cleanedJson = cleanedJson.Trim();
-
-            return cleanedJson;
+        private double GetBlockCount(double difficultyScore){
+            return Math.Ceiling(difficultyScore/5);
         }
 
-        private Dictionary<string,object> TranslateJSON(string json){
-            return JsonSerializer.Deserialize<Dictionary<string, object>>(Clean(json));
+        private ProblemResponse CheckForNull(ProblemResponse response){
+            response.Problem ??= "Error Occurred";
+            response.Codeblocks ??= new List<string>{"EMPTY"};
+
+            return response;
         }
 
-        public async Task<Dictionary<string,object>> GenerateProblemDynamic(){
-            var chat = new Chat(ollama);
-            string output="";
+        private ProblemResponse RandomizeBlocks(ProblemResponse response){
+            Random.Shared.Shuffle(CollectionsMarshal.AsSpan(response.Codeblocks));
+            return response;
+        }
 
-            await foreach (var answerToken in chat.SendAsync(
-            $"""
-                You are a Programming Problem Generator. Your goal is to create problems based off of a difficulty score, and then respective
-                code blocks to complete the problem.
+        public async Task<ProblemResponse> GenerateProblemDynamic(int difficultyScore){
+            string prompt=string.Format(Constants.OllamaConstants.prompt_editable,difficultyScore,GetBlockCount(difficultyScore))+Constants.OllamaConstants.prompt_static;
+            ProblemResponse result=new ProblemResponse{Problem=null,Codeblocks=null};;
 
-                **DIFFICULTY SCORE**
-                - {difficultyScore}
+            try{
+                var response=await ollama.GetResponseAsync<ProblemResponse>(prompt);
+                result=response.Result;
+            }catch(Exception e){
+                Console.WriteLine(e);
+            }
 
-                **INSTRUCTIONS**
-                - Programming Problem
-                    - Use the Difficulty Score above to determine the difficulty and number of blocks
-                    - The number of blocks should be based off this formula **FORMULA**:(Math.Ceil({difficultyScore}/4))
-                        - EXAMPLE: If difficulty score is 100, then their should be 25 individual blocks
-                        - Each block should be one line of code used in the program
-                    - The difficulty of the program should consist of harder concepts and a more vague prompt
-                        - Difficulty Score is between 1-100, 1 being the lowest and 100 being the highest
-            """+
-            """
-                **STRUCTURE**
-                - JSON
-                - "problem" is the problem statement it "Make me a program that finds the longest word in the list"
-                - Inside of the "problem_code_blocks" list, create a seperate string for each **LINE OF CODE** used in the program
-                    - NUMBER OF BLOCK: 1-n, where n is the number of code blocks determined the **FORMULA** in Instructions
-                - EXAMPLE:
-                {
-                    "problem":""
-                    "problem_code_blocks":[]
-                }
-
-                **OUTPUT**
-                - Only Output the JSON
-                    - Do not provide any other information or discuss the output.
-                - CRITICAL: Return ONLY raw JSON. Do not wrap the JSON in markdown code blocks, do not use ```json, and do not include any surrounding text.
-
-            """))
-                output+=answerToken;
-
-            return translator(output);
+            return processResponse(result);
         }
     }
 }

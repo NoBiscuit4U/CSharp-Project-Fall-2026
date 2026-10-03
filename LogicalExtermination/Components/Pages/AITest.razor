@@ -13,6 +13,7 @@ else
 {
     <p role="status">@problem</p>
     <ul>
+        <h2>Code Blocks</h2>
         @foreach (var block in codeblocks)
         {
             <li>@block</li>
@@ -24,9 +25,10 @@ else
 
 @code {
     private Backend.OllamaManager ollama = new Backend.OllamaManager(Backend.Constants.OllamaConstants.gemma2b);
-    private Dictionary<string,object> output = null;
-    private string problem = null;
-    private List<string> codeblocks = null;
+    private ProblemResponse output = null;
+    private string problem;
+    private List<string> codeblocks;
+    private int difficultyScore=100;
     protected override async Task OnInitializedAsync()
     {
         await GetTest();
@@ -34,9 +36,9 @@ else
 
     private async Task GetTest()
     {
-        output = null;
-        output = await ollama.GenerateProblemDynamic();
-        problem = output["problem"].ToString();
-        codeblocks = output["codeblocks"] as List<string>;
+        output=null;
+        output = await ollama.GenerateProblemDynamic(difficultyScore);
+        problem=output.Problem;
+        codeblocks=output.Codeblocks;
     }
 }

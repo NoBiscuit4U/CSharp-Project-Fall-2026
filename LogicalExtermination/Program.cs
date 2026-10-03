@@ -24,8 +24,4 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-//app.Run();
-
-OllamaManager ollama=new OllamaManager(Constants.OllamaConstants.gemma2b);
-Console.WriteLine("INIT");
-Console.WriteLine(await ollama.GenerateProblemDynamic());
+app.Run();
