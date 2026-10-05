@@ -21,8 +21,16 @@ namespace Backend{
         public OllamaManager(string Model){
             this.Model=Model;
 
-            processResponse=new ProcessResponse(CheckForNull);
-            processResponse+=new ProcessResponse(RandomizeBlocks);
+            processResponse=response =>{
+                response.Problem ??= "Error Occurred";
+                response.Codeblocks ??= new List<string> { "EMPTY" };
+                return response;
+            };
+
+            processResponse+=response =>{
+                Random.Shared.Shuffle(CollectionsMarshal.AsSpan(response.Codeblocks));
+                return response;
+            };
 
             Initalize();
         }
@@ -36,18 +44,6 @@ namespace Backend{
 
         private double GetBlockCount(double difficultyScore){
             return Math.Ceiling(difficultyScore/5);
-        }
-
-        private ProblemResponse CheckForNull(ProblemResponse response){
-            response.Problem ??= "Error Occurred";
-            response.Codeblocks ??= new List<string>{"EMPTY"};
-
-            return response;
-        }
-
-        private ProblemResponse RandomizeBlocks(ProblemResponse response){
-            Random.Shared.Shuffle(CollectionsMarshal.AsSpan(response.Codeblocks));
-            return response;
         }
 
         public async Task<ProblemResponse> GenerateProblemDynamic(int difficultyScore){
