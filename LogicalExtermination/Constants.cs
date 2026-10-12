@@ -48,19 +48,19 @@ namespace Backend{
                 2. Do NOT use string concatenation with '+' (e.g. "a" + "b"). Use string interpolation ($"...") or simple variables instead.
                 3. Use single quotes (') for literal strings inside code lines (e.g. 'hello') to avoid string escaping conflicts.
                 4. Do not leave placeholder comments like '// add code here'. Write complete code.
-                5. Any place a variable is called within the program you will need to place a format placeholder {n} for each occurence of a any variable.
-                    - Example: print(f"Dog Type: {dog_type}, Cat Type: {cat_type}) -> print(f"Dog Type: {0}, Cat Type: {1})
-                    - Example: x=y+z -> {0}={1}+{2}
+                5. Write simple code that is easy to understand. Avoid complex one-liners or advanced Python features.
 
                 ##OUTPUT EXAMPLE##
                 Only change the Codeblocks output but it should look like this.
                 - Problem: "Write a program that finds the longest word in a list."
-                - CompletedCode:"
-                    
-                "
+                - Input: "input = ['apple', 'banana', 'cherry']"
                 - Codeblocks:
                 [
-                    
+                    "longest = ''"
+                    "for word in input:"
+                    "   if word.length() > longest.length():"
+                    "       longest = word"
+                    "print(longest)"
                 ]
                 """;
 
