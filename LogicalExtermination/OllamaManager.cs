@@ -16,18 +16,18 @@ namespace Backend{
         private string Model;
         private OllamaApiClient ollama;
 
-        private ProcessResponse processResponse;
+        private readonly ProcessResponse ProcessResponse;
 
         public OllamaManager(string Model){
             this.Model=Model;
 
-            processResponse=response =>{
+            ProcessResponse=response =>{
                 response.Problem ??= "Error Occurred";
                 response.Codeblocks ??= new List<string> { "EMPTY" };
                 return response;
             };
 
-            processResponse+=response =>{
+            ProcessResponse+=response =>{
                 Random.Shared.Shuffle(CollectionsMarshal.AsSpan(response.Codeblocks));
                 return response;
             };
@@ -57,7 +57,7 @@ namespace Backend{
                 Console.WriteLine(e);
             }
 
-            return processResponse(result);
+            return ProcessResponse(result);
         }
     }
 }

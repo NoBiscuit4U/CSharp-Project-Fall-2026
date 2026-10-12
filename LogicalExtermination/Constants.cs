@@ -31,5 +31,9 @@ namespace Backend{
               ]
             """;
         }
+
+        public class PythonConstants{
+            public static string py_test_file="test.py";
+        }
     }
 }
