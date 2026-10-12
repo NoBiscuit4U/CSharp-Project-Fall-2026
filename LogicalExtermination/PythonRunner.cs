@@ -25,8 +25,32 @@ class PythonRunner{
         File.WriteAllText(Constants.PythonConstants.py_test_file,ProcessCode(blocks));
     }
 
+    private async Task WriteCode(string code){
+        File.WriteAllText(Constants.PythonConstants.py_test_file,code);
+    }
+
     public async Task<string> RunTestPy(List<string> blocks){
         await WriteCode(blocks);
+        ScriptSource script=Engine.CreateScriptSourceFromFile(Constants.PythonConstants.py_test_file);
+
+        using(MemoryStream memoryStream=new MemoryStream()){
+            Engine.Runtime.IO.SetOutput(memoryStream,Encoding.UTF8);
+
+            
+            try{
+                script.Execute(Scope);
+
+                string terminal_out=Encoding.UTF8.GetString(memoryStream.ToArray());
+                return terminal_out;
+            }catch(Exception e){
+                Console.WriteLine("Error Occurred: {0}", e);
+                return "Error Occurred with Python Code";
+            }
+        }
+    }
+
+    public async Task<string> RunTestPy(string code){
+        await WriteCode(code);
         ScriptSource script=Engine.CreateScriptSourceFromFile(Constants.PythonConstants.py_test_file);
 
         using(MemoryStream memoryStream=new MemoryStream()){

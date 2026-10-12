@@ -1,4 +1,5 @@
 ﻿@page "/aitest"
+@using Microsoft.Extensions.AI
 @rendermode InteractiveServer
 
 <PageTitle>AI Test</PageTitle>
@@ -11,7 +12,19 @@
 }
 else
 {
+    <h2>Problem</h2>
     <p role="status">@problem</p>
+    <h2>Completed Code</h2>
+    <p>role="status">@completed_code</p>
+    <ul>
+        <h2>Variables</h2>
+        @foreach (var var in variables)
+        {
+            <li>@var</li>
+        }
+    </ul>
+    <h2>Terminal Output</h2>
+    <p role="status">@terminal_out</p>
     <ul>
         <h2>Code Blocks</h2>
         @foreach (var block in codeblocks)
@@ -19,14 +32,18 @@ else
             <li>@block</li>
         }
     </ul>
+    <p role="status">@terminal_out</p>
 }
 
 <button class="btn btn-primary" @onclick="GetTest">Reload</button>
 
 @code {
-    private Backend.OllamaManager ollama = new Backend.OllamaManager(Backend.Constants.OllamaConstants.qwencoder2_5_7b);
+    private Backend.OllamaManager ollama = new Backend.OllamaManager(Backend.Constants.OllamaConstants.qwen2_5_3b,new PythonRunner());
     private ProblemResponse output = null;
     private string problem;
+    private string completed_code;
+    private List<string> variables;
+    private string terminal_out;
     private List<string> codeblocks;
     private int difficultyScore=100;
     protected override async Task OnInitializedAsync()
@@ -37,8 +54,11 @@ else
     private async Task GetTest()
     {
         output=null;
-        output = await ollama.GenerateProblemAnswer(new List<dynamic>{});
+        output = await ollama.GetProblemResponse();
         problem=output.Problem;
+        completed_code=output.CompletedCode;
         codeblocks=output.Codeblocks;
+        variables=output.Variables;
+        terminal_out=output.TerminalOutput;
     }
 }
