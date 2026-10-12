@@ -7,6 +7,8 @@ using Microsoft.Extensions.AI;
 public record ProblemResponse(){
     public required string Problem {get;set;}=null;
     public required List<string> Codeblocks {get;set;}=null;
+    public required string CompletedCode {get;set;}=null;
+    public required List<string> Variables {get;set;}=null;
 }
 
 public delegate ProblemResponse ProcessResponse(ProblemResponse response);
@@ -46,23 +48,35 @@ namespace Backend{
             return Math.Ceiling(difficultyScore/5);
         }
 
-        public async Task<ProblemResponse> GenerateProblemQuestion(List<dynamic> list_inputs){
-            string prompt=string.Format(Constants.OllamaConstants.prompt_editable_question,list_inputs);
-            ProblemResponse result=new ProblemResponse{Problem=null,Codeblocks=null};;
-
-            try{
-                var response=await ollama.GetResponseAsync<ProblemResponse>(prompt);
-                result=response.Result;
-            }catch(Exception e){
-                Console.WriteLine(e);
-            }
-
-            return ProcessResponse(result);
+        private List<string> GetInputs(){
+            return new List<string>{};
         }
 
-        public async Task<ProblemResponse> GenerateProblemAnswer(List<dynamic> list_inputs){
-            string prompt=string.Format(Constants.OllamaConstants.prompt_editable_answer,list_inputs);
-            ProblemResponse result=new ProblemResponse{Problem=null,Codeblocks=null};
+        private async Task<string> GenerateProblem(string prompt,List<string> list_inputs){
+            ProblemResponse response = await Generate(string.Format(prompt,list_inputs));
+            return response.Problem;
+        }
+
+        private async Task<string> GenerateAnswer(string prompt,List<string> list_inputs,string problem_statement){
+            ProblemResponse response = await Generate(string.Format(prompt,list_inputs,problem_statement));
+            return response.CompletedCode;
+        }
+
+        private async Task<string> GenerateBlocks(string prompt,string completed_code){
+            ProblemResponse response = await Generate(string.Format(prompt,completed_code));
+            return response.Problem;
+        }
+
+        public async Task<ProblemResponse> GetProblemResponse(){
+            List<string> list_inputs=GetInputs();
+            string problem=await GenerateProblem(Constants.OllamaConstants.prompt_editable_answer,list_inputs);
+
+            return new ProblemResponse{Problem=null,Codeblocks=null,CompletedCode=null,Variables=null};
+
+        }
+
+        private async Task<ProblemResponse> Generate(string prompt){
+            ProblemResponse result=new ProblemResponse{Problem=null,Codeblocks=null,CompletedCode=null,Variables=null};
 
             try{
                 var response=await ollama.GetResponseAsync<ProblemResponse>(prompt);

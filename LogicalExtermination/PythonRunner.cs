@@ -21,11 +21,12 @@ class PythonRunner{
         };
     }
 
-    public async Task WriteCode(List<string> blocks){
+    private async Task WriteCode(List<string> blocks){
         File.WriteAllText(Constants.PythonConstants.py_test_file,ProcessCode(blocks));
     }
 
-    public async Task<string> RunTestPy(){
+    public async Task<string> RunTestPy(List<string> blocks){
+        await WriteCode(blocks);
         ScriptSource script=Engine.CreateScriptSourceFromFile(Constants.PythonConstants.py_test_file);
 
         using(MemoryStream memoryStream=new MemoryStream()){

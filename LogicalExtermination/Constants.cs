@@ -18,8 +18,7 @@ namespace Backend{
                 Using the provided input list above, ask a programming question for a programming {1}.
 
                 ##OUTPUT##
-                Only output the problem statement.
-                Do not provide any other information.
+                Only output the problem statement in the Problem key in the Schema.
                 """;
 
             public static string prompt_editable_answer="""
@@ -33,6 +32,17 @@ namespace Backend{
                 ##PROBLEM STATEMENT##
                 {1}
 
+                ##OUTPUT##
+                Output the completed program into the CompletedCode key in the Schema.
+            """;
+
+            public static string prompt_editable_blocks="""
+                ##PERSONA##
+                You are a code block generator. You will take in a completed python program and turn it into code blocks.
+                
+                ##COMPLETED CODE##
+                {0}
+
                 ##INSTRUCTION##
                 1. Each element in 'Codeblocks' must be exactly ONE valid, executable Python line.
                 2. Do NOT use string concatenation with '+' (e.g. "a" + "b"). Use string interpolation ($"...") or simple variables instead.
@@ -43,12 +53,14 @@ namespace Backend{
                     - Example: x=y+z -> {0}={1}+{2}
 
                 ##OUTPUT EXAMPLE##
+                Only change the Codeblocks output but it should look like this.
                 - Problem: "Write a program that finds the longest word in a list."
+                - CompletedCode:"
+                    
+                "
                 - Codeblocks:
                 [
-                    "var words = new List<string> { 'apple', 'banana', 'cherry' };",
-                    "var longest = words.OrderByDescending(w => w.Length).First();",
-                    "Console.WriteLine($\"Longest word: {longest}\");"
+                    
                 ]
                 """;
 
