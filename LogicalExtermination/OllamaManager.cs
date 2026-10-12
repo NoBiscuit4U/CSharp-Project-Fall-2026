@@ -23,7 +23,7 @@ namespace Backend{
 
             ProcessResponse=response =>{
                 response.Problem ??= "Error Occurred";
-                response.Codeblocks ??= new List<string> { "EMPTY" };
+                response.Codeblocks ??= new List<string> {"EMPTY"};
                 return response;
             };
 
@@ -46,9 +46,23 @@ namespace Backend{
             return Math.Ceiling(difficultyScore/5);
         }
 
-        public async Task<ProblemResponse> GenerateProblemDynamic(int difficultyScore){
-            string prompt=string.Format(Constants.OllamaConstants.prompt_editable,difficultyScore,GetBlockCount(difficultyScore))+Constants.OllamaConstants.prompt_static;
+        public async Task<ProblemResponse> GenerateProblemQuestion(List<dynamic> list_inputs){
+            string prompt=string.Format(Constants.OllamaConstants.prompt_editable_question,list_inputs);
             ProblemResponse result=new ProblemResponse{Problem=null,Codeblocks=null};;
+
+            try{
+                var response=await ollama.GetResponseAsync<ProblemResponse>(prompt);
+                result=response.Result;
+            }catch(Exception e){
+                Console.WriteLine(e);
+            }
+
+            return ProcessResponse(result);
+        }
+
+        public async Task<ProblemResponse> GenerateProblemAnswer(List<dynamic> list_inputs){
+            string prompt=string.Format(Constants.OllamaConstants.prompt_editable_answer,list_inputs);
+            ProblemResponse result=new ProblemResponse{Problem=null,Codeblocks=null};
 
             try{
                 var response=await ollama.GetResponseAsync<ProblemResponse>(prompt);
