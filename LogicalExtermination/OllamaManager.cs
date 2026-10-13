@@ -3,6 +3,9 @@ using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using Microsoft.Extensions.AI;
+using System.Reflection.Metadata;
+using Microsoft.Scripting.Ast;
+using IronPython.Runtime.Operations;
 
 public record ProblemResponse(){
     public required string Problem {get;set;}=null;
@@ -10,6 +13,12 @@ public record ProblemResponse(){
     public required string CompletedCode {get;set;}=null;
     public required List<string> Variables {get;set;}=null;
     public required string TerminalOutput {get;set;}=null;
+}
+public record StringListResponse(){
+    public required List<string> StringList {get;set;}=null;
+}
+public record StringResponse(){
+    public required string Output {get;set;}=null;
 }
 
 public delegate ProblemResponse ProcessResponse(ProblemResponse response);
@@ -60,18 +69,37 @@ namespace Backend{
                 .ToList();
         }
 
-        private async Task<string> GenerateProblem(string prompt,List<string> list_inputs){
-            ProblemResponse response = await Generate(string.Format(prompt,list_inputs));
-            return response.Problem;
+        private List<string> ReplaceVars(List<string> codeblocks,List<string> variables){
+            List<string> finalized_blocks=new List<string>();
+            foreach(string block in codeblocks){
+                string final_block=block;
+                foreach(string var in variables){
+                    final_block=final_block.replace(var,Constants.OllamaConstants.blank);
+                }
+
+                finalized_blocks.Add(final_block);
+            }
+            Console.WriteLine("FINALIZED_BLOCKS:{0}",string.Join(", \n",finalized_blocks));
+            return finalized_blocks;
         }
 
-        private async Task<string> GenerateAnswer(string prompt,List<string> list_inputs,string problem_statement){
-            ProblemResponse response = await Generate(string.Format(prompt,list_inputs,problem_statement));
-            return response.CompletedCode;
+        private async Task<string> GenerateProblem(string prompt,string list_inputs){
+            string response = await GenerateStringResponse(string.Format(prompt,list_inputs));
+            return response;
+        }
+
+        private async Task<string> GenerateAnswer(string prompt,string list_inputs,string problem_statement){
+            string response = await GenerateStringResponse(string.Format(prompt,list_inputs,problem_statement));
+            return response;
         }
 
         private async Task<ProblemResponse> GenerateBlocks(string prompt,string completed_code){
-            ProblemResponse response = await Generate(string.Format(prompt,completed_code));
+            ProblemResponse response = await GenerateProblemResponse(string.Format(prompt,completed_code));
+            return response;
+        }
+
+        private async Task<List<string>> FormatGeneratedBlocks(string prompt,string code_blocks){
+            List<string> response = await GenerateStringListResponse(string.Format(prompt,code_blocks));
             return response;
         }
 
@@ -82,21 +110,21 @@ namespace Backend{
             int max_trys=10;
             int i=0;
 
-            string problem=await GenerateProblem(Constants.OllamaConstants.prompt_editable_question,list_inputs);
-            Console.WriteLine("Problem:{0}",problem);
+            string problem=await GenerateProblem(Constants.OllamaConstants.prompt_editable_question,string.Join(", \n",list_inputs));
+            //Console.WriteLine("Problem:{0}",problem);
 
-            string completed_code=await GenerateAnswer(Constants.OllamaConstants.prompt_editable_answer,list_inputs,problem);
-            Console.WriteLine("Completed_Code: {0}",completed_code);
+            string completed_code=await GenerateAnswer(Constants.OllamaConstants.prompt_editable_answer,string.Join(", \n",list_inputs),problem);
+            //Console.WriteLine("Completed_Code: {0}",completed_code);
 
             while(!verified && max_trys!=i){
                 try{
                     terminal_output=await pythonRunner.RunTestPy(completed_code);
-                    Console.WriteLine("Terminal_Output:{0}",terminal_output);
+                    //Console.WriteLine("Terminal_Output:{0}",terminal_output);
 
                     verified=true;
                     break;
                 }catch(Exception e){
-                    completed_code=await GenerateAnswer(Constants.OllamaConstants.prompt_editable_blocks,list_inputs,problem);
+                    completed_code=await GenerateAnswer(Constants.OllamaConstants.prompt_editable_answer,string.Join(", \n",list_inputs),problem);
 
                     if(max_trys <= i){
                         return new ProblemResponse{Problem=null,Codeblocks=null,CompletedCode=null,Variables=null,TerminalOutput=null};
@@ -107,16 +135,19 @@ namespace Backend{
             }
 
             ProblemResponse response=await GenerateBlocks(Constants.OllamaConstants.prompt_editable_blocks,completed_code);
+            Console.WriteLine("Blocks:{0}",string.Join(", \n",response.Codeblocks));
+            Console.WriteLine("Variables:{0}",string.Join(", \n",response.Variables));
 
             response.Problem=problem;
             response.CompletedCode=completed_code;
             response.TerminalOutput=terminal_output;
+            response.Codeblocks=ReplaceVars(response.Codeblocks,response.Variables);
 
-            return response;
-
+            //Console.WriteLine("Returning Response");
+            return processResponse(response);
         }
 
-        private async Task<ProblemResponse> Generate(string prompt){
+         private async Task<ProblemResponse> GenerateProblemResponse(string prompt){
             ProblemResponse result=new ProblemResponse{Problem=null,Codeblocks=null,CompletedCode=null,Variables=null,TerminalOutput=null};
 
             try{
@@ -126,7 +157,33 @@ namespace Backend{
                 Console.WriteLine(e);
             }
 
-            return processResponse(result);
+            return result;
+        }
+
+        private async Task<string> GenerateStringResponse(string prompt){
+            StringResponse result=new StringResponse{Output=null};
+
+            try{
+                var response=await ollama.GetResponseAsync<StringResponse>(prompt);
+                result=response.Result;
+            }catch(Exception e){
+                Console.WriteLine(e);
+            }
+
+            return result.Output;
+        }
+
+        private async Task<List<string>> GenerateStringListResponse(string prompt){
+            StringListResponse result=new StringListResponse{StringList=null};
+
+            try{
+                var response=await ollama.GetResponseAsync<StringListResponse>(prompt);
+                result=response.Result;
+            }catch(Exception e){
+                Console.WriteLine(e);
+            }
+
+            return result.StringList;
         }
     }
 }

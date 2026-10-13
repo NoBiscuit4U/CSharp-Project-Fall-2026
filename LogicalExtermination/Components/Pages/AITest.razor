@@ -13,9 +13,9 @@
 else
 {
     <h2>Problem</h2>
-    <p role="status">@problem</p>
+    <p>@problem</p>
     <h2>Completed Code</h2>
-    <p>role="status">@completed_code</p>
+    <p>@completed_code</p>
     <ul>
         <h2>Variables</h2>
         @foreach (var var in variables)
@@ -24,7 +24,7 @@ else
         }
     </ul>
     <h2>Terminal Output</h2>
-    <p role="status">@terminal_out</p>
+    <p>@terminal_out</p>
     <ul>
         <h2>Code Blocks</h2>
         @foreach (var block in codeblocks)
@@ -32,7 +32,6 @@ else
             <li>@block</li>
         }
     </ul>
-    <p role="status">@terminal_out</p>
 }
 
 <button class="btn btn-primary" @onclick="GetTest">Reload</button>
@@ -48,11 +47,12 @@ else
     private int difficultyScore=100;
     protected override async Task OnInitializedAsync()
     {
-        await GetTest();
+        //await GetTest();
     }
 
     private async Task GetTest()
     {
+        Console.WriteLine("Running...");
         output=null;
         output = await ollama.GetProblemResponse();
         problem=output.Problem;

@@ -1,8 +1,10 @@
-print('Enter your name:')
-name = input()
-try:
-    if not isinstance(name, str):
-        raise ValueError('Name must be a string.')
-    print(f'Hello, {name}!')
-except ValueError as e:
-    print(e)
+def count_fruits_starting_with_a(fruits_list):
+    count = 0
+    for fruit in fruits_list:
+        if fruit.startswith('a'):
+            count += 1
+    return count
+
+fruits = ['apple', 'banana', 'cherry']
+result = count_fruits_starting_with_a(fruits)
+print(result)
