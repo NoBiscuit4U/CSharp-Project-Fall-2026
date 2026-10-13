@@ -37,7 +37,7 @@ else
 <button class="btn btn-primary" @onclick="GetTest">Reload</button>
 
 @code {
-    private Backend.OllamaManager ollama = new Backend.OllamaManager(Backend.Constants.OllamaConstants.qwen2_5_3b,new PythonRunner());
+    private Backend.OllamaManager ollama = new Backend.OllamaManager(Backend.Constants.OllamaConstants.qwencoder2_5_7b,new PythonRunner());
     private ProblemResponse output = null;
     private string problem;
     private string completed_code;
