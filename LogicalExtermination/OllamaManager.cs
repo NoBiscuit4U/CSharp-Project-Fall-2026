@@ -70,6 +70,8 @@ namespace Backend{
         }
 
         private List<string> ReplaceVars(List<string> codeblocks,List<string> variables){
+            variables=variables.OrderByDescending(s=>s.Length).ToList();
+
             List<string> finalized_blocks=new List<string>();
             foreach(string block in codeblocks){
                 string final_block=block;
@@ -116,6 +118,7 @@ namespace Backend{
             string completed_code=await GenerateAnswer(Constants.OllamaConstants.prompt_editable_answer,string.Join(", \n",list_inputs),problem);
             //Console.WriteLine("Completed_Code: {0}",completed_code);
 
+            //TODO: Refine and Make Iterative Instead of Hardcoded Max Trys
             while(!verified && max_trys!=i){
                 try{
                     terminal_output=await pythonRunner.RunTestPy(completed_code);

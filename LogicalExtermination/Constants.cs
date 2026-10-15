@@ -10,7 +10,7 @@ namespace Backend{
             public static string prompt_editable_question="""
                 ##PERSONA##
                 You are a Python programming problem generator. 
-                You will be given a list of variable with values that will be used as inputs for the program.
+                You will be given a list of variables with values that will be used as inputs for the program.
                 Use the variables with assigned values and write a problem question related to them.
 
                 ##INPUT AND VAR LIST##
@@ -33,7 +33,7 @@ namespace Backend{
             public static string prompt_editable_answer="""
                 ##PERSONA##
                 You are a program solver for a Python program. You will be provided a list of inputs and a problem statement.
-                You are not to solve the problem, but only to write a program in Pytohn to solve it.
+                You are not to solve the problem, but only to write a program in Python to solve it.
 
                 ##INPUT LIST##
                 {0}
@@ -42,14 +42,15 @@ namespace Backend{
                 {1}
 
                 ##INSTRUCTION##
-                Write a python program to solve the problem.
-                Output a final value using print()
+                Write a python program to solve the problem, ensure that it can be run in one file.
+                    - Output a final value using print().
                 Ensure you do not pull from outside libraries or packages using import.
                 Ensure that variables are defined and that it will run and provide a terminal output.
                 Ensure it displays a human readable output.
 
                 ##OUTPUT##
-                Output the completed program into the Output key values in the Schema.
+                Make sure the Output is a complete Python script, not an output that says the answer.
+                Output the completed pythob program into the Output key values in the Schema.
                 Do not output using back ticks or encase it
                     - DO NOT: ```python .... ```
                     - DO NOT USE ``` ANYWHERE
@@ -66,8 +67,9 @@ namespace Backend{
 
                 ##INSTRUCTION##
                 Do not edit any code, only turn each line into a code block.
-                Remove all unique variables from the program and output them in a list.
-                    -Do not output the values of the variables only the variable names.
+                Take all unique variables from the program and output them in a list.
+                    -Do not output the values of the variables only the variable names.s
+                    -Do not remove the variables from the code only collect the unique variable names.
 
                 ##OUTPUT EXAMPLE##
                 Only change the Codeblocks and Variables key values in then output.
