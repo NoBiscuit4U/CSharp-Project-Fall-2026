@@ -38,7 +38,7 @@ else
 
 @code {
     private Backend.OllamaManager ollama = new Backend.OllamaManager(Backend.Constants.OllamaConstants.qwencoder2_5_7b,new PythonRunner());
-    private ProblemResponse output = null;
+    private StructuredResult output = null;
     private string problem;
     private string completed_code;
     private List<string> variables;
@@ -54,7 +54,7 @@ else
     {
         Console.WriteLine("Running...");
         output=null;
-        output = await ollama.GetProblemResponse();
+        output = await ollama.GetStructuredResult();
         problem=output.Problem;
         completed_code=output.CompletedCode;
         codeblocks=output.Codeblocks;
