@@ -90,6 +90,8 @@ namespace Backend{
         }
 
         private List<string> ReplaceVars(List<string> codeblocks,List<string> variables){
+            variables=variables.OrderByDescending(s=>s.Length).ToList();
+
             List<string> finalized_blocks=new List<string>();
             foreach(string block in codeblocks){
                 string final_block=block;
