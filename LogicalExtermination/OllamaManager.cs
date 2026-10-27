@@ -46,15 +46,16 @@ namespace Backend{
 
             ollama_endpoint=new OllamaApiClient(uri,Model);
 
-            problem_agent=ollama_endpoint.AsAIAgent(
-                    instructions:Constants.OllamaConstants.problem_agent_instructions,
-                    name:"Problem Agent");
             answer_agent=ollama_endpoint.AsAIAgent(
                     instructions:Constants.OllamaConstants.answer_agent_instructions,
                     name:"Answer Agent");
             blocking_agent=ollama_endpoint.AsAIAgent(
                     instructions:Constants.OllamaConstants.blocking_agent_instructions,
                     name:"Blocking Agent");
+            ollama_endpoint.SelectedModel=Constants.OllamaConstants.mistralnemo;
+            problem_agent=ollama_endpoint.AsAIAgent(
+                    instructions:Constants.OllamaConstants.problem_agent_instructions,
+                    name:"Problem Agent");
             overseer_agent=ollama_endpoint.AsAIAgent(
                     instructions:Constants.OllamaConstants.overseer_agent_instructions,
                     name:"Overseer",
@@ -89,20 +90,20 @@ namespace Backend{
                 .ToList();
         }
 
-        private List<string> ReplaceVars(List<string> codeblocks,List<string> variables){
-            variables=variables.OrderByDescending(s=>s.Length).ToList();
+        private void ReplaceVars(StructuredResult result){
+            result.Variables=result.Variables.OrderByDescending(s=>s.Length).ToList();
 
             List<string> finalized_blocks=new List<string>();
-            foreach(string block in codeblocks){
+            foreach(string block in result.Codeblocks){
                 string final_block=block;
-                foreach(string var in variables){
+                foreach(string var in result.Variables){
                     final_block=final_block.replace(var,Constants.OllamaConstants.blank);
                 }
 
                 finalized_blocks.Add(final_block);
             }
             Console.WriteLine("FINALIZED_BLOCKS:{0}",string.Join(", \n",finalized_blocks));
-            return finalized_blocks;
+            result.Codeblocks=finalized_blocks;
         }
 
         public async Task<StructuredResult> GetStructuredResult(){
@@ -112,8 +113,29 @@ namespace Backend{
                 Use the following variables with values and generate the provided structured result:
                 {StringListToString(list_inputs)}
             """);
+            StructuredResult result=response.Result;
+            ReplaceVars(result);
 
-            return response.Result;
+
+            return result;
+        }
+
+        public async Task<StructuredResult> TestGetStructuredResult(){
+            var result = new StructuredResult{ 
+                Problem = "Given the input list ['apple', 'banana', 'cherry'], create a Python code snippet that prints each fruit on a new line.",
+                Codeblocks = new List<string>
+                {
+                    "___ = ['apple', 'banana', 'cherry']",
+                    "for fruit in ___:",
+                    "print(fruit)",
+                },
+                CompletedCode = "for fruit in input_list:\nprint(fruit)",
+                Variables = new List<string> { "input_list" },
+                TerminalOutput = "apple banana cherry"
+            };
+
+            ReplaceVars(result);
+            return result;
         }
 
         private async Task<string> GetTerminalOutput(string code){

@@ -54,7 +54,7 @@ else
     {
         Console.WriteLine("Running...");
         output=null;
-        output = await ollama.GetStructuredResult();
+        output = await ollama.GetStructuredResult(); //await ollama.TestGetStructuredResult(); 
         problem=output.Problem;
         completed_code=output.CompletedCode;
         codeblocks=output.Codeblocks;
