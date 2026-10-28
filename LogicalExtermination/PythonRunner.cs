@@ -51,11 +51,15 @@ class PythonRunner{
         using MemoryStream memoryStream=new MemoryStream();
         Engine.Runtime.IO.SetOutput(memoryStream,Encoding.UTF8);
 
-            
-        script.Execute(Scope);
+        try{
+            script.Execute(Scope);
 
-        string terminal_out=Encoding.UTF8.GetString(memoryStream.ToArray());
-        return terminal_out;
+            string terminal_out=Encoding.UTF8.GetString(memoryStream.ToArray());
+            return terminal_out;
+        }catch(Exception e){
+                Console.WriteLine("Error Occurred: {0}", e);
+                return "Error Occurred with Python Code";
+            }
     }
 
 }
