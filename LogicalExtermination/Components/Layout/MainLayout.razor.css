@@ -2,6 +2,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    color: #ffffff;
+    background-color: #000000;
 }
 
 main {
@@ -13,14 +15,22 @@ main {
 }
 
 .top-row {
-    background-color: #f7f7f7;
-    border-bottom: 1px solid #d6d5d5;
-    justify-content: flex-end;
+    background-color: #000000;
+    border-bottom: 1px solid #303030;
+    justify-content: space-between;
     height: 3.5rem;
     display: flex;
+    flex-flow: row wrap;
     align-items: center;
+
 }
 
+    .top-row div {
+        margin: 10 px;
+        padding: 20px;
+        color: #ffffff;
+    }
+    
     .top-row ::deep a, .top-row ::deep .btn-link {
         white-space: nowrap;
         margin-left: 1.5rem;
@@ -36,7 +46,12 @@ main {
         text-overflow: ellipsis;
     }
 
-@media (max-width: 640.98px) {
+.content {
+    justify-content: center;
+
+}
+
+    @media (max-width: 640.98px) {
     .top-row {
         justify-content: space-between;
     }
@@ -96,3 +111,4 @@ main {
         right: 0.75rem;
         top: 0.5rem;
     }
+
