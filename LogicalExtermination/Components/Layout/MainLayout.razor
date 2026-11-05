@@ -1,19 +1,23 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-@*    <div class="sidebar">
-        <NavMenu />
-    </div>
-*@
-    <main>
-        <div class="top-row px-4">
-            <div>Logical Extermination</div>
-            <div>Return to Home</div>
+<PageTitle>Logical Extermination</PageTitle>
+
+<div class="segment">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div>
+        <div class="box px-10">
+            <article class="content px-4">
+                @Body
+            </article>
         </div>
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+    </div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>

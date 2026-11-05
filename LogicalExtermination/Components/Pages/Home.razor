@@ -1,13 +1,41 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@inject NavigationManager NavMan
 
-<PageTitle>Logical Extermination</PageTitle>
+<style>
+    .content {
+        text-align: center;
+    }
+    .play-btn {
+        background-color: rgb(16, 16, 16);
+        font-size: 24px;
+        padding: 10px 20px; <!-- vertical, horizontal -->
+        margin: 10px;
+        border: 2px solid white;
+        border-radius: 16px;
+    }
+    .play-btn:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
+</style>
 
-<h1>Hello, world!</h1>
+<div class="content">
+    <h1>Logical Extermination</h1>
 
-Welcome to your new app.
+    <button class="play-btn" type="button" style="color: rgb(0, 200, 0)" @onclick="() => StartGame(1)">Easy</button>
+    <button class="play-btn" type="button" style="color: orange" @onclick="() => StartGame(5)">Medium</button>
+    <button class="play-btn" type="button" style="color: rgb(255, 25, 25)" @onclick="() => StartGame(10)">Hard</button>
 
-<div class="Start Game px-3">
-    <NavLink class="nav-link" href="aitest">
-        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Start Game
-    </NavLink>
+    <p></p>
+    <p>Select a difficulty to begin.</p>
 </div>
+
+@code {
+    private void StartGame(int difficulty)
+    {
+        Console.WriteLine($"Difficulty is: {difficulty}");
+        NavMan.NavigateTo("/play");
+    }
+}

@@ -132,6 +132,7 @@ namespace Backend{
                 CompletedCode = "for fruit in input_list:\nprint(fruit)",
                 Variables = new List<string> { "input_list" },
                 TerminalOutput = "apple banana cherry"
+                
             };
 
             ReplaceVars(result);

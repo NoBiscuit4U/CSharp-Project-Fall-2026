@@ -1,44 +1,236 @@
-﻿@page "/aitest"
+﻿@page "/play"
 @rendermode InteractiveServer
+@inject NavigationManager NavMan
 
-<PageTitle>AI Test</PageTitle>
+<style>
+    .content {
+        text-align: center;
+    }
+    .AnswerArea{
+        display: grid;
+        grid-template-columns: 1fr 6fr 1fr;
+    }
+    .AnswerSpace{
+        display: grid;
+        grid-template-rows: repeat(auto-fit, minmax(40px, 1fr));
+    }
+    .AnswerBlock {
+        display: grid;
+        grid-template-columns: 25px 25px 3fr 1fr;
+        gap: 10 px;
+        justify-content: center;
+        height: 40px;
+    }
+    .InactiveBlock {
+        display: grid;
+        grid-template-columns: 25px 1fr;
+        gap: 10 px;
+        justify-content: center;
+        height: 40px;
+    }
+    .AnswerPiece {
+        padding: 5px;
+        background-color: rgb(16, 16, 16);
+        border: 1px solid white;
+        border-radius: 4px;
+        text-align: left;
+        height: 36px;
+        margin: 1px;
+    }
+    .VarBlock {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(25px, 1fr));
+        height: 40px
+    }
+    .VarPiece {
+        padding: 8px;
+        background-color: rgb(16, 16, 16);
+        border: 1px solid white;
+        border-radius: 4px;
+        height: 36px;
+        width: 128px;
+        margin: 1px;
+    }
+    .Arrows {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        height: 38px;
+    }
+    .Act-btn {
+        background-color: rgb(16, 16, 16);
+        margin: 1px;
+        border: 1px solid white;
+        border-radius: 4px;
+        color: white;
+        height: 36px;
+    }
+    .Act-btn:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
+    .Arw-btn {
+        background-color: rgb(16, 16, 16);
+        margin: 1px;
+        border: 1px solid white;
+        border-radius: 4px;
+        color: white;
+        font-size: 8px;
+    }
+    .Arw-btn:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
+</style>
 
-<h1>AI Test</h1>
-
+<h2>Squash the Bug</h2>
 @if (output == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <p role="status">@problem</p>
-    <ul>
-        <h2>Code Blocks</h2>
-        @foreach (var block in codeblocks)
-        {
-            <li>@block</li>
-        }
-    </ul>
+    <p>@problem</p>
+    <p>Active Bricks</p>
+    <div class="AnswerArea">
+        <div></div>
+        <div class="AnswerSpace">
+            @for (int i = 0; i < activeBricks.Count; i++)
+            {
+                int index = i;
+                <div class="AnswerBlock">
+                    <div>
+                        <button class="Act-btn"
+                            @onclick="() => { deactivate(index); }">-</button>
+                    </div>
+                    <div class="Arrows">
+                        <button class="Arw-btn"
+                            disabled="@(i == 0)"
+                            @onclick="() => moveUp(index)">▲</button>
+                        <button class="Arw-btn"
+                            disabled="@(i == activeBricks.Count - 1)"
+                            @onclick="() => moveDown(index)">▼</button>
+                    </div>
+                    <div class="AnswerPiece">
+                        <p>@activeBricks[i].code</p>
+                    </div>
+                    <div class="VarBlock">
+                        @for (int j = 0; j < activeBricks[i].varCount; j++) { <div class="VarPiece"></div> }
+                    </div>
+                </div>
+            }
+        </div>
+        <div></div>
+    </div>
+    <p>Inactive Bricks</p>
+    <div class="AnswerArea">
+        <div></div>
+        <div class="AnswerSpace">
+            @for (int i = 0; i < inactiveBricks.Count; i++)
+            {
+                int index = i;
+                <div class="InactiveBlock">
+                    <div class="Arrows">
+                        <button class="Act-btn"
+                            @onclick="() => activate(index)">+</button>
+                    </div>
+                    <div class="AnswerPiece">
+                        <p>@inactiveBricks[i].code</p>
+                    </div>
+                </div>
+            }
+        </div>
+        <div></div>
+    </div>
 }
 
-<button class="btn btn-primary" @onclick="GetTest">Reload</button>
+<!-- <button class="btn btn-primary" @onclick="GetTest">Reload</button> -->
 
 @code {
-    private Backend.OllamaManager ollama = new Backend.OllamaManager(Backend.Constants.OllamaConstants.gemma2b);
-    private ProblemResponse output = null;
+    private class CodeBrick
+    {
+        public string code { get; set; }
+        public int varCount { get; set; }
+        public List<string> variables { get; set; }
+
+        public CodeBrick(string text, int count)
+        {
+            code = text;
+            varCount = count;
+            variables = new List<string>();
+            for (int i = 0; i < varCount; i++)
+            {
+                variables.Add("");
+            }
+        }
+    }
+    //private Backend.OllamaManager ollama = new Backend.OllamaManager(Backend.Constants.OllamaConstants.qwencoder2_5_7b,new PythonRunner());
+    private StructuredResult output = null;
     private string problem;
+    private string completed_code;
+    private List<string> variables;
+    private string terminal_out;
     private List<string> codeblocks;
+    private int block_count;
     private int difficultyScore=100;
+    private List<CodeBrick> inactiveBricks;
+    private List<CodeBrick> activeBricks;
     protected override async Task OnInitializedAsync()
     {
         await GetTest();
     }
-
     private async Task GetTest()
     {
+        var ollama = new Backend.OllamaManager(Backend.Constants.OllamaConstants.qwencoder2_5_7b, new PythonRunner());
+        Console.WriteLine("Running...");
         output=null;
-        output = await ollama.GenerateProblemDynamic(difficultyScore);
+        output = await ollama.TestGetStructuredResult(); //await ollama.GetStructuredResult(); 
         problem=output.Problem;
+        completed_code=output.CompletedCode;
         codeblocks=output.Codeblocks;
+        variables=output.Variables;
+        terminal_out=output.TerminalOutput;
+        //block_count=output.BlockCount;
+        List <CodeBrick> tempBricks = new List<CodeBrick>();
+        Random rng = new Random();
+        for (int i = 0; i < codeblocks.Count; i++)
+        {
+            tempBricks.Add(new CodeBrick(codeblocks[i], 1));
+        }
+        inactiveBricks = new List<CodeBrick>();
+        for (int j = 0; j < codeblocks.Count; j++)
+        {
+            int ranId = rng.Next(0,tempBricks.Count);
+            inactiveBricks.Add(tempBricks[ranId]);
+            tempBricks.RemoveAt(ranId);
+        }
+        activeBricks = new List<CodeBrick>();
+    }
+    private void moveUp(int id)
+    {
+        if (id != 0) {
+            CodeBrick temp = activeBricks[id];
+            activeBricks[id] = activeBricks[id - 1];
+            activeBricks[id - 1] = temp;
+        }
+    }
+    private void moveDown(int id)
+    {
+        if (id != activeBricks.Count - 1) {
+            CodeBrick temp = activeBricks[id];
+            activeBricks[id] = activeBricks[id + 1];
+            activeBricks[id + 1] = temp;
+        }
+    }
+    private void activate(int id)
+    {
+        activeBricks.Add(inactiveBricks[id]);
+        inactiveBricks.RemoveAt(id);
+    }
+    private void deactivate(int id)
+    {
+        inactiveBricks.Add(activeBricks[id]);
+        activeBricks.RemoveAt(id);
     }
 }

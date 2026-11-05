@@ -1,94 +1,19 @@
-.page {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    color: #ffffff;
-    background-color: #000000;
+.segment {
+    display: grid;
+    grid-template-rows: 1fr auto 1fr;
+    grid-template-columns: 1fr auto 1fr;
+    background-color: black;
+    color: white;
+    width: 100%;
+    min-height: 100vh;
+    font-family: "Lucida Console", "Courier New", monospace;
 }
 
-main {
-    flex: 1;
-}
-
-.sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
-}
-
-.top-row {
-    background-color: #000000;
-    border-bottom: 1px solid #303030;
-    justify-content: space-between;
-    height: 3.5rem;
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-
-}
-
-    .top-row div {
-        margin: 10 px;
-        padding: 20px;
-        color: #ffffff;
-    }
-    
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        white-space: nowrap;
-        margin-left: 1.5rem;
-        text-decoration: none;
-    }
-
-    .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
-        text-decoration: underline;
-    }
-
-    .top-row ::deep a:first-child {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-.content {
-    justify-content: center;
-
-}
-
-    @media (max-width: 640.98px) {
-    .top-row {
-        justify-content: space-between;
-    }
-
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        margin-left: 0;
-    }
-}
-
-@media (min-width: 641px) {
-    .page {
-        flex-direction: row;
-    }
-
-    .sidebar {
-        width: 250px;
-        height: 100vh;
-        position: sticky;
-        top: 0;
-    }
-
-    .top-row {
-        position: sticky;
-        top: 0;
-        z-index: 1;
-    }
-
-    .top-row.auth ::deep a:first-child {
-        flex: 1;
-        text-align: right;
-        width: 0;
-    }
-
-    .top-row, article {
-        padding-left: 2rem !important;
-        padding-right: 1.5rem !important;
-    }
+.box {
+    padding: 10px;
+    background-color: rgb(16, 16, 16);
+    border: 2px solid white;
+    border-radius: 16px;
 }
 
 #blazor-error-ui {
@@ -111,4 +36,3 @@ main {
         right: 0.75rem;
         top: 0.5rem;
     }
-
