@@ -1,0 +1,44 @@
+﻿@page "/aitest"
+@rendermode InteractiveServer
+
+<PageTitle>AI Test</PageTitle>
+
+<h1>AI Test</h1>
+
+@if (output == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p role="status">@problem</p>
+    <ul>
+        <h2>Code Blocks</h2>
+        @foreach (var block in codeblocks)
+        {
+            <li>@block</li>
+        }
+    </ul>
+}
+
+<button class="btn btn-primary" @onclick="GetTest">Reload</button>
+
+@code {
+    private Backend.OllamaManager ollama = new Backend.OllamaManager(Backend.Constants.OllamaConstants.gemma2b);
+    private ProblemResponse output = null;
+    private string problem;
+    private List<string> codeblocks;
+    private int difficultyScore=100;
+    protected override async Task OnInitializedAsync()
+    {
+        await GetTest();
+    }
+
+    private async Task GetTest()
+    {
+        output=null;
+        output = await ollama.GenerateProblemDynamic(difficultyScore);
+        problem=output.Problem;
+        codeblocks=output.Codeblocks;
+    }
+}
