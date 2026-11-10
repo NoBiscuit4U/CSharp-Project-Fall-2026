@@ -6,6 +6,7 @@ using IronPython.Runtime.Operations;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.Scripting.Hosting;
 
+namespace Backend;
 public delegate string ProcessCode(List<string> blocks);
 class PythonRunner{
     private  readonly ScriptEngine Engine;
