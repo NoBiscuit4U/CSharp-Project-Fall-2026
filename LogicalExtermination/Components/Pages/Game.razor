@@ -1,5 +1,7 @@
 ﻿@page "/play"
 @rendermode InteractiveServer
+@using Backend
+@using IronPython.Hosting
 @inject NavigationManager NavMan
 
 <style>
@@ -80,25 +82,8 @@ else
 <!-- <button class="btn btn-primary" @onclick="GetTest">Reload</button> -->
 
 @code {
-    private static int difficulty { get; set; }
-    private class CodeBrick
-    {
-        public string code { get; set; }
-        public int varCount { get; set; }
-        public List<string> variables { get; set; }
-
-        public CodeBrick(string text, int count)
-        {
-            code = text;
-            varCount = count;
-            variables = new List<string>();
-            for (int i = 0; i < varCount; i++)
-            {
-                variables.Add("");
-            }
-        }
-    }
-    private Backend.OAIManager oai = new Backend.OAIManager(Backend.Constants.OAIConstants.default_model,new Backend.PythonRunner());
+    private PythonRunner pythonRunner=new PythonRunner();
+    private OAIManager oai=null!;
     private StructuredResult output = null;
     private string problem;
     private string completed_code;
@@ -123,7 +108,7 @@ else
     }
     private async Task GetTest()
     {
-        var oai = new Backend.OAIManager(Backend.Constants.OAIConstants.default_model, new Backend.PythonRunner());
+        var oai = new OAIManager(Constants.OAIConstants.default_model,pythonRunner);
         Console.WriteLine("Running...");
         output=null;
         output = await oai.GetStructuredResult(difficulty); 
