@@ -165,7 +165,7 @@ else
             }
         }
     }
-    //private Backend.OllamaManager ollama = new Backend.OllamaManager(Backend.Constants.OllamaConstants.qwencoder2_5_7b,new PythonRunner());
+    private Backend.OAIManager oai = new Backend.OAIManager(Backend.Constants.OAIConstants.default_model,new Backend.PythonRunner());
     private StructuredResult output = null;
     private string problem;
     private string completed_code;
@@ -182,10 +182,10 @@ else
     }
     private async Task GetTest()
     {
-        var ollama = new Backend.OllamaManager(Backend.Constants.OllamaConstants.qwencoder2_5_7b, new PythonRunner());
+        var oai = new Backend.OAIManager(Backend.Constants.OAIConstants.default_model, new Backend.PythonRunner());
         Console.WriteLine("Running...");
         output=null;
-        output = await ollama.TestGetStructuredResult(); //await ollama.GetStructuredResult(); 
+        output = await oai.GetStructuredResult(); 
         problem=output.Problem;
         completed_code=output.CompletedCode;
         codeblocks=output.Codeblocks;

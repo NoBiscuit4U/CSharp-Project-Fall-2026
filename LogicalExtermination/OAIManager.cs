@@ -45,10 +45,10 @@ namespace Backend{
             IChatClient chatClient=new ChatClient(Model,apiKey).AsIChatClient();
 
             answer_agent=chatClient.AsAIAgent(
-                    instructions:Constants.OpenAIAgentsConstants.answer_agent_instructions,
+                    instructions:Constants.OAIConstants.answer_agent_instructions,
                     name:"Answer Agent");
             problem_agent=chatClient.AsAIAgent(
-                    instructions:Constants.OpenAIAgentsConstants.problem_agent_instructions,
+                    instructions:Constants.OAIConstants.problem_agent_instructions,
                     name:"Problem Agent");
 
             processResponse=response =>{
@@ -71,7 +71,7 @@ namespace Backend{
         }
 
         private List<string> GetInputs(int num){
-            return Constants.OpenAIAgentsConstants.static_var_val_string
+            return Constants.OAIConstants.static_var_val_string
                 .OrderBy(_ => Random.Shared.Next())
                 .Take(num)
                 .ToList();
@@ -179,7 +179,7 @@ namespace Backend{
 
                     string identifier=code[i..end];
                     output.AddRange(variables.Contains(identifier)
-                        ? Constants.OpenAIAgentsConstants.blank
+                        ? Constants.OAIConstants.blank
                         : identifier);
                     i=end;
                     continue;

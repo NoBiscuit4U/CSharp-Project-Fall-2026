@@ -1,6 +1,6 @@
 namespace Backend{
     class Constants{
-        public class OpenAIAgentsConstants{
+        public class OAIConstants{
             public static string default_model="gpt-4o-mini";
             public static string problem_agent_instructions="""
                 ##PERSONA##
