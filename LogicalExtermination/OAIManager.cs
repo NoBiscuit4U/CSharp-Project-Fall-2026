@@ -30,7 +30,7 @@ public delegate StructuredResult ProcessResponse(StructuredResult response);
 namespace Backend{
     sealed class OAIManager{
         private readonly ProcessResponse processResponse;
-        private readonly PythonRunner pythonRunner;
+        private PythonRunner pythonRunner;
 
         private readonly AIAgent problem_agent;
         private readonly AIAgent answer_agent;
