@@ -6,82 +6,6 @@
     .content {
         text-align: center;
     }
-    .AnswerArea{
-        display: grid;
-        grid-template-columns: 1fr 6fr 1fr;
-    }
-    .AnswerSpace{
-        display: grid;
-        grid-template-rows: repeat(auto-fit, minmax(40px, 1fr));
-    }
-    .AnswerBlock {
-        display: grid;
-        grid-template-columns: 25px 25px 3fr 1fr;
-        gap: 10 px;
-        justify-content: center;
-        height: 40px;
-    }
-    .InactiveBlock {
-        display: grid;
-        grid-template-columns: 25px 1fr;
-        gap: 10 px;
-        justify-content: center;
-        height: 40px;
-    }
-    .AnswerPiece {
-        padding: 5px;
-        background-color: rgb(16, 16, 16);
-        border: 1px solid white;
-        border-radius: 4px;
-        text-align: left;
-        height: 36px;
-        margin: 1px;
-    }
-    .VarBlock {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(25px, 1fr));
-        height: 40px
-    }
-    .VarPiece {
-        padding: 8px;
-        background-color: rgb(16, 16, 16);
-        border: 1px solid white;
-        border-radius: 4px;
-        height: 36px;
-        width: 128px;
-        margin: 1px;
-    }
-    .Arrows {
-        display: grid;
-        grid-template-rows: 1fr 1fr;
-        height: 38px;
-    }
-    .Act-btn {
-        background-color: rgb(16, 16, 16);
-        margin: 1px;
-        border: 1px solid white;
-        border-radius: 4px;
-        color: white;
-        height: 36px;
-    }
-    .Act-btn:hover {
-        background-color: white;
-        color: black;
-        cursor: pointer;
-    }
-    .Arw-btn {
-        background-color: rgb(16, 16, 16);
-        margin: 1px;
-        border: 1px solid white;
-        border-radius: 4px;
-        color: white;
-        font-size: 8px;
-    }
-    .Arw-btn:hover {
-        background-color: white;
-        color: black;
-        cursor: pointer;
-    }
 </style>
 
 <h2>Squash the Bug</h2>
@@ -92,7 +16,6 @@
 else
 {
     <p>@problem</p>
-    <p>Active Bricks</p>
     <div class="AnswerArea">
         <div></div>
         <div class="AnswerSpace">
@@ -116,14 +39,23 @@ else
                         <p>@activeBricks[i].code</p>
                     </div>
                     <div class="VarBlock">
-                        @for (int j = 0; j < activeBricks[i].varCount; j++) { <div class="VarPiece"></div> }
+                        @for (int j = 0; j < activeBricks[i].varCount; j++)
+                        {
+                        int varIndex = j;
+                        <select @bind="activeBricks[index].variables[varIndex]" class="VarPiece">
+                            <option value=""></option>
+                                @foreach (var v in variables)
+                                {
+                                    <option value="@v">@v</option>
+                                }
+                            </select>                            
+                        }
                     </div>
                 </div>
             }
         </div>
         <div></div>
     </div>
-    <p>Inactive Bricks</p>
     <div class="AnswerArea">
         <div></div>
         <div class="AnswerSpace">
@@ -132,10 +64,10 @@ else
                 int index = i;
                 <div class="InactiveBlock">
                     <div class="Arrows">
-                        <button class="Act-btn"
+                        <button class="InactiveAct-btn"
                             @onclick="() => activate(index)">+</button>
                     </div>
-                    <div class="AnswerPiece">
+                    <div class="InactivePiece">
                         <p>@inactiveBricks[i].code</p>
                     </div>
                 </div>
@@ -148,6 +80,7 @@ else
 <!-- <button class="btn btn-primary" @onclick="GetTest">Reload</button> -->
 
 @code {
+    private static int difficulty { get; set; }
     private class CodeBrick
     {
         public string code { get; set; }
@@ -173,19 +106,27 @@ else
     private string terminal_out;
     private List<string> codeblocks;
     private int block_count;
-    private int difficultyScore=100;
+    //private int difficultyScore=100;
     private List<CodeBrick> inactiveBricks;
     private List<CodeBrick> activeBricks;
     protected override async Task OnInitializedAsync()
     {
         await GetTest();
     }
+    public static int getDifficulty()
+    {
+        return difficulty;
+    }
+    public static void setDifficulty(int diff)
+    {
+        difficulty = diff;
+    }
     private async Task GetTest()
     {
         var oai = new Backend.OAIManager(Backend.Constants.OAIConstants.default_model, new Backend.PythonRunner());
         Console.WriteLine("Running...");
         output=null;
-        output = await oai.GetStructuredResult(); 
+        output = await oai.GetStructuredResult(difficulty); 
         problem=output.Problem;
         completed_code=output.CompletedCode;
         codeblocks=output.Codeblocks;
@@ -196,7 +137,8 @@ else
         Random rng = new Random();
         for (int i = 0; i < codeblocks.Count; i++)
         {
-            tempBricks.Add(new CodeBrick(codeblocks[i], 1));
+            int varcount = codeblocks[i].Length - codeblocks[i].Replace("___", "__").Length;
+            tempBricks.Add(new CodeBrick(codeblocks[i], varcount));
         }
         inactiveBricks = new List<CodeBrick>();
         for (int j = 0; j < codeblocks.Count; j++)

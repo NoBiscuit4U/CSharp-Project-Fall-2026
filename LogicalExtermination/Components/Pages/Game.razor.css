@@ -1,0 +1,102 @@
+.content {
+        text-align: center;
+}
+.AnswerArea{
+    display: grid;
+    grid-template-columns: 1fr 6fr 1fr;
+}
+.AnswerSpace{
+    display: grid;
+    grid-template-rows: repeat(auto-fit, minmax(40px, 1fr));
+}
+.AnswerBlock {
+    display: grid;
+    grid-template-columns: 25px 25px minmax(0px, 1fr) auto;
+    justify-content: center;
+    height: 40px;
+}
+.InactiveBlock {
+    display: grid;
+    grid-template-columns: 25px 1fr;
+    justify-content: center;
+    height: 40px;
+}
+.AnswerPiece {
+    padding: 5px;
+    background-color: rgb(16, 16, 16);
+    border: 1px solid white;
+    border-radius: 4px;
+    text-align: left;
+    height: 36px;
+    margin: 1px;
+}
+.InactivePiece {
+    padding: 5px;
+    color: gray;
+    background-color: rgb(16, 16, 16);
+    border: 1px solid gray;
+    border-radius: 4px;
+    text-align: left;
+    height: 36px;
+    margin: 1px;
+}
+.VarBlock {
+    display: flex;
+    gap: 2px;
+    height: 40px
+}
+.VarPiece {
+    flex: 0 0 128px;
+    padding: 8px;
+    color: white;
+    background-color: rgb(16, 16, 16);
+    border: 1px solid white;
+    border-radius: 4px;
+    height: 36px;
+    margin: 1px;
+}
+.Arrows {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    height: 38px;
+}
+.Act-btn {
+    background-color: rgb(16, 16, 16);
+    margin: 1px;
+    border: 1px solid white;
+    border-radius: 4px;
+    color: white;
+    height: 36px;
+}
+.Act-btn:hover {
+    background-color: white;
+    color: black;
+    cursor: pointer;
+}
+
+.InactiveAct-btn {
+    background-color: rgb(16, 16, 16);
+    margin: 1px;
+    border: 1px solid gray;
+    border-radius: 4px;
+    color: gray;
+    height: 36px;
+}
+.InactiveAct-btn:hover {
+    background-color: gray;
+    color: black;
+    cursor: pointer;
+}
+.Arw-btn {
+    background-color: rgb(16, 16, 16);
+    margin: 1px;
+    border: 1px solid white;
+    border-radius: 4px;
+    color: white;
+    font-size: 8px;
+}
+.Arw-btn:hover {
+    background-color: white;
+    color: black;
+    cursor: pointer;
+}

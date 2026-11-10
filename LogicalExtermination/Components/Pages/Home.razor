@@ -25,17 +25,21 @@
     <h1>Logical Extermination</h1>
 
     <button class="play-btn" type="button" style="color: rgb(0, 200, 0)" @onclick="() => StartGame(1)">Easy</button>
-    <button class="play-btn" type="button" style="color: orange" @onclick="() => StartGame(5)">Medium</button>
-    <button class="play-btn" type="button" style="color: rgb(255, 25, 25)" @onclick="() => StartGame(10)">Hard</button>
+    <button class="play-btn" type="button" style="color: orange" @onclick="() => StartGame(25)">Medium</button>
+    <button class="play-btn" type="button" style="color: rgb(255, 25, 25)" @onclick="() => StartGame(50)">Hard</button>
 
     <p></p>
     <p>Select a difficulty to begin.</p>
 </div>
 
 @code {
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    StartGame(1);
+    //}
     private void StartGame(int difficulty)
     {
-        Console.WriteLine($"Difficulty is: {difficulty}");
+        Game.setDifficulty(difficulty);
         NavMan.NavigateTo("/play");
     }
 }

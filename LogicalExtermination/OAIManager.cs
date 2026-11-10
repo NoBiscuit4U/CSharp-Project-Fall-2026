@@ -199,10 +199,10 @@ namespace Backend{
             return new string(output.ToArray());
         }
 
-        public async Task<StructuredResult> GetStructuredResult(int difficultyScore=50){
-            if(difficultyScore is < 0 or > 100){
-                throw new ArgumentOutOfRangeException(nameof(difficultyScore),"Difficulty score must be between 0 and 100.");
-            }
+        public async Task<StructuredResult> GetStructuredResult(int difficultyScore){
+//            if(difficultyScore is < 0 or > 100){
+  //              throw new ArgumentOutOfRangeException(nameof(difficultyScore),"Difficulty score must be between 0 and 100.");
+    //        }
 
             Console.WriteLine($"[Agent workflow] Starting generation (difficulty {difficultyScore}/100).");
             List<string> list_inputs=GetInputs(1);
