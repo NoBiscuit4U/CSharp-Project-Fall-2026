@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using IronPython.Runtime.Operations;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using OpenAI.Chat;
@@ -62,6 +63,12 @@ namespace Backend{
 
             processResponse+=response =>{
                 Random.Shared.Shuffle(CollectionsMarshal.AsSpan(response.Codeblocks));
+
+                foreach(string block in response.Codeblocks){
+                    if(block.strip()[0]=='#'){
+                        response.Codeblocks.Remove(block);
+                    }
+                }
                 return response;
             };
         }

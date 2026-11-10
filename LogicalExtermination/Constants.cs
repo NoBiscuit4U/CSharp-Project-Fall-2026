@@ -38,6 +38,7 @@ namespace Backend{
                 Preserve every supplied variable name and value exactly; do not redefine or replace them.
                 Use only Python built-ins. Do not import modules, call input(), or depend on external data.
                 Keep the solution appropriate for the requested difficulty and print a clear, human-readable result.
+                    -Do not include comments in your response
                 Ensure the script runs from top to bottom and prints at least one line.
 
                 ##OUTPUT##
