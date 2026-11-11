@@ -1,11 +1,26 @@
 ﻿@inherits LayoutComponentBase
+@using LogicalExtermination.Components.Pages
+
+<style>
+    .text {
+        text-align: right;
+        align-content: right;
+        color: white;
+        padding: 25px;
+        line-height: 0.75;
+        grid-column-start: 2;
+        grid-column-end: 4;
+    }
+</style>
 
 <PageTitle>Logical Extermination</PageTitle>
 
 <div class="segment">
     <div></div>
-    <div></div>
-    <div></div>
+    <div class="text">
+        <p>Difficulty:</p>
+        <p style="color: @Color; font-size: 48px;">@Game.getDifficulty()</p>
+    </div>
     <div></div>
     <div>
         <div class="box px-10">
@@ -25,3 +40,23 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code{
+    static private string Color = "rgb(0, 200, 0)";
+    protected override async Task OnInitializedAsync()
+    {
+        updateColor();
+    }
+    public static void updateColor()
+    {
+        int dif = Game.getDifficulty();
+        int r = (255 * dif / 100);
+        int g = (175 - (175 * dif / 100)) + 25;
+        int b = (25 * dif / 100);
+        Color = $"rgb({r}, {g}, {b})";
+    }
+    public static string getColor()
+    {
+        return Color;
+    }
+}

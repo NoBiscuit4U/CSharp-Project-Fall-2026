@@ -1,0 +1,52 @@
+@page "/success"
+@rendermode InteractiveServer
+@inject NavigationManager NavMan
+
+<style> 
+    .continue {
+        background-color: rgb(16, 16, 16);
+        color: white;
+        font-size: 24px;
+        padding: 10px 20px; <!-- vertical, horizontal -->
+        margin: 10px;
+        border: 2px solid white;
+        border-radius: 16px;
+    }
+    .continue:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }.goOn {
+        background-color: rgb(16, 16, 16);
+        color: @MainLayout.getColor();
+        font-size: 24px;
+        padding: 10px 20px; <!-- vertical, horizontal -->
+        margin: 10px;
+        border: 2px solid white;
+        border-radius: 16px;
+    }
+    .goOn:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+</style>
+
+<div class="content">
+    <h1 style="color: rgb(0,200,0)">Success!</h1>
+    <button class="continue" @onclick="() => Again()">Go Again</button>
+    <button class="goOn" @onclick="() => IncDiff()">Increase Difficulty</button>
+</div>
+
+@code {
+    private void Again()
+    {
+        NavMan.NavigateTo("/play");
+    }
+    private void IncDiff()
+    {
+        if (Game.getDifficulty() < 100)
+            Game.setDifficulty(Game.getDifficulty() + 5);
+            MainLayout.updateColor();
+        NavMan.NavigateTo("/play");
+    }
+}

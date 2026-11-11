@@ -4,12 +4,6 @@
 @using IronPython.Hosting
 @inject NavigationManager NavMan
 
-<style>
-    .content {
-        text-align: center;
-    }
-</style>
-
 <h2>Squash the Bug</h2>
 @if (output == null)
 {
@@ -58,6 +52,9 @@ else
         </div>
         <div></div>
     </div>
+    <div style="padding: 20px;">
+        <button class="Act-btn";" @onclick="() => CheckAnswer()">Submit</button>
+    </div>
     <div class="AnswerArea">
         <div></div>
         <div class="AnswerSpace">
@@ -97,6 +94,8 @@ else
     private List<CodeBrick> activeBricks;
     protected override async Task OnInitializedAsync()
     {
+        MainLayout.updateColor();
+        output=null;
         await GetTest();
     }
     public static int getDifficulty()
@@ -160,5 +159,16 @@ else
     {
         inactiveBricks.Add(activeBricks[id]);
         activeBricks.RemoveAt(id);
+    }
+    private void CheckAnswer()
+    {
+        if (new Random().Next(0,1) == 0)
+        {
+            NavMan.NavigateTo("/success");
+        }
+        else
+        {
+            NavMan.NavigateTo("/incorrect");
+        }
     }
 }
