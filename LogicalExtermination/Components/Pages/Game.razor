@@ -1,5 +1,6 @@
 ﻿@page "/play"
 @rendermode InteractiveServer
+@using System.Runtime.InteropServices
 @using Backend
 @using IronPython.Hosting
 @inject NavigationManager NavMan
@@ -92,22 +93,21 @@ else
     //private int difficultyScore=100;
     private List<CodeBrick> inactiveBricks;
     private List<CodeBrick> activeBricks;
-    protected override async Task OnInitializedAsync()
-    {
+
+    protected override async Task OnInitializedAsync(){
         MainLayout.updateColor();
         output=null;
         await GetTest();
     }
+
     public static int getDifficulty()
     {
         return difficulty;
     }
-    public static void setDifficulty(int diff)
-    {
+    public static void setDifficulty(int diff){
         difficulty = diff;
     }
-    private async Task GetTest()
-    {
+    private async Task GetTest(){
         var oai = new OAIManager(Constants.OAIConstants.default_model,pythonRunner);
         Console.WriteLine("Running...");
         output=null;
@@ -160,14 +160,12 @@ else
         inactiveBricks.Add(activeBricks[id]);
         activeBricks.RemoveAt(id);
     }
-    private void CheckAnswer()
-    {
-        if (new Random().Next(0,1) == 0)
-        {
+    private async Task CheckAnswer(){
+        var test_term_out=await pythonRunner.RunTestPy(activeBricks);
+
+        if(test_term_out==terminal_out){
             NavMan.NavigateTo("/success");
-        }
-        else
-        {
+        }else{
             NavMan.NavigateTo("/incorrect");
         }
     }
