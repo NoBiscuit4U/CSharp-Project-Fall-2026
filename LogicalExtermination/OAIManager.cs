@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using IronPython.Runtime.Operations;
 using Microsoft.Agents.AI;
+using Microsoft.AspNetCore.Components.Infrastructure;
 using Microsoft.Extensions.AI;
 using OpenAI.Chat;
 
@@ -298,7 +299,9 @@ namespace Backend{
     //        }
 
             Console.WriteLine($"[Agent workflow] Starting generation (difficulty {difficultyScore}/100).");
-            List<string> list_inputs= new List<string> {Variables.GetVar()};//GetInputs(1);
+            String gotVars = Variables.GetVar();
+            LogicalExtermination.Components.Pages.Game.setVars(gotVars);
+            List<string> list_inputs= new List<string> {gotVars};//GetInputs(1);
             List<string> inputNames=GetInputVariableNames(list_inputs);
             string inputText=StringListToString(list_inputs);
             Console.WriteLine($"[Agent workflow] Selected input variables: {string.Join(", ",inputNames)}.");

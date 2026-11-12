@@ -16,6 +16,14 @@ else
     <div class="AnswerArea">
         <div></div>
         <div class="AnswerSpace">
+            <div class="AnswerBlock">
+                <div></div>
+                <div></div>
+                <div class="AnswerPiece">
+                    <p>@vars</p>
+                </div>
+                <div></div>
+            </div>
             @for (int i = 0; i < activeBricks.Count; i++)
             {
                 int index = i;
@@ -93,6 +101,7 @@ else
     //private int difficultyScore=100;
     private List<CodeBrick> inactiveBricks;
     private List<CodeBrick> activeBricks;
+    private static String vars = "";
 
     protected override async Task OnInitializedAsync(){
         MainLayout.updateColor();
@@ -168,5 +177,9 @@ else
         }else{
             NavMan.NavigateTo("/incorrect");
         }
+    }
+    public static void setVars(String v)
+    {
+        vars = v;
     }
 }

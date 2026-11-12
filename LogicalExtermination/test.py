@@ -1,4 +1,5 @@
-word = 'butterfly'
-uppercase_word = word.upper()
-print('Original word:', word)
-print('Uppercase word:', uppercase_word)
+word = 'Kitten'
+reversed_word = ''
+for character in word:
+    reversed_word = character + reversed_word
+print(reversed_word)

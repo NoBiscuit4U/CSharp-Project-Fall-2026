@@ -4,6 +4,7 @@
 .AnswerArea{
     display: grid;
     grid-template-columns: 1fr 6fr 1fr;
+    text-align: left;
 }
 .AnswerSpace{
     display: grid;

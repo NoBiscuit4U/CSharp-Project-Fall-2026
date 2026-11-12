@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using LogicalExtermination.Components.Pages;
 
 namespace Backend
@@ -9,17 +10,18 @@ namespace Backend
         public static string GetVar()
         {
             int dif = Game.getDifficulty();
-            int scale = (int)MathF.Ceiling(dif / 25.0f);
+            int scale = (int)MathF.Ceiling(dif / 10.0f);
             String output = "";
-            int type = rand.Next(0, 5) + scale;
-            if (type == 0) { output = GetWord(); }
-            else if (type == 1) { output = GetNums(); }
-            else if (type == 2) { output = GetNumList(); }
-            else if (type == 3) { output = GetWords(); }
-            else if (type == 4) { output = GetBigNumList(); }
-            else if (type == 5) { output = GetWordList(); }
-            else if (type == 6) { output = GetPhrase(); }
-            else if (type == 7) { output = GetPhrase(); }
+            int type = rand.Next(0, 5 + scale); //Range from 0,6 - 0,16 
+            if (type < 2) { output = GetWord(); }
+            else if (type >= 2 && type < 6) { output = GetNums(); }
+            else if (type >= 6 && type < 7) { output = GetNumList(); }
+            else if (type >= 7 && type < 9) { output = GetWords(); }
+            else if (type >= 9 && type < 12) { output = GetBigNumList(); }
+            else if (type >= 12 && type < 13) { output = GetWordList(); }
+            else if (type >= 13 && type < 15) { output = GetPhrase(); }
+            else if (type >= 15) { output = GetPhrase(); }
+            Console.WriteLine(output);
             return output;
         }
         // word, nums, numList, words, bigNumList, wordList, phrase, dictionary
@@ -64,27 +66,27 @@ namespace Backend
                 if (name == 0) { vars = new List<string> {"a", "b"}; }
                 else if (name == 1) { vars = new List<string> {"x", "y"}; }
                 else if (name == 2) { vars = new List<string> {"i", "j"}; }
-                output = $"{vars[0]} = {rand.Next(1, 10)}, {vars[1]} = {rand.Next(1, 10)}";
+                output = $"{vars[0]}, {vars[1]} = {rand.Next(1, 10)}, {rand.Next(1, 10)}";
             }
             if (count == 4 || count == 5)
             {
                 if (name == 0) { vars = new List<string> {"a", "b", "c"}; }
                 else if (name == 1) { vars = new List<string> {"x", "y", "z"}; }
                 else if (name == 2) { vars = new List<string> {"f", "g", "h"}; }
-                output = $"{vars[0]} = {rand.Next(1, 10)}, {vars[1]} = {rand.Next(1, 10)}, {vars[2]} = {rand.Next(1, 10)}";
+                output = $"{vars[0]}, {vars[1]}, {vars[2]} = {rand.Next(1, 10)}, {rand.Next(1, 10)}, {rand.Next(1, 10)}";
             }
             if (count == 7)
             {
                 if (name == 0) { vars = new List<string> {"a", "b", "c", "d"}; }
                 else if (name == 1) { vars = new List<string> {"w", "x", "y", "z"}; }
                 else if (name == 2) { vars = new List<string> {"a", "b", "c", "d"}; }
-                output = $"{vars[0]} = {rand.Next(1, 10)}, {vars[1]} = {rand.Next(1, 10)}, {vars[2]} = {rand.Next(1, 10)}, {vars[3]} = {rand.Next(1, 10)}";
+                output = $"{vars[0]}, {vars[1]}, {vars[2]}, {vars[3]} = {rand.Next(1, 10)}, {rand.Next(1, 10)}, {rand.Next(1, 10)}, {rand.Next(1, 10)}";
             }
             return output;
         }
         private static string GetNumList()
         {
-            String output = "numbers = [";
+            String output = "input = [";
             int count = rand.Next(2, 6);
             for (int i = 0; i < count; i++)
             {
@@ -102,17 +104,17 @@ namespace Backend
             List<string> wordList = words();
             if (count == 2)
             {
-                output = $"word1 = ['{wordList[rand.Next(0, 10)]}', word2 ='{wordList[rand.Next(0, 10)]}']";
+                output = $"word1, word2 = ['{wordList[rand.Next(0, 10)]}', '{wordList[rand.Next(0, 10)]}']";
             }
             if (count == 3)
             {
-                output = $"word1 = ['{wordList[rand.Next(0, 10)]}', word2 ='{wordList[rand.Next(0, 10)]}', word3 ='{wordList[rand.Next(0, 10)]}']";
+                output = $"word1, word2, word3 = ['{wordList[rand.Next(0, 10)]}', '{wordList[rand.Next(0, 10)]}', '{wordList[rand.Next(0, 10)]}']";
             }
             return output;
         }
         private static string GetBigNumList()
         {
-            String output = "numbers = [";
+            String output = "input = [";
             int count = rand.Next(2, 6);
             int type = rand.Next(0, 2);
             if (type == 0)
@@ -138,7 +140,7 @@ namespace Backend
         }
         private static string GetWordList()
         {
-            string output = "words = [";
+            string output = "input = [";
             int count = rand.Next(2, 5);
             List<string> wordList = words();
             for (int i = 0; i < count; i++)
