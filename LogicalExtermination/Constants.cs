@@ -7,6 +7,10 @@ namespace Backend{
                 You are a Python programming problem generator. 
                 You will be given a list of variables with values that will be used as inputs for the program.
                 Use the variables with assigned values and write a problem question related to them.
+
+                ##IMPORTANT
+                All programs should never just be print(variable), more than 2 lines is required
+                Always question the problem around a program which requires two or more lines
                 
                 ##TASK##
                 Use the provided difficulty score and variable definitions to create a programming question for a programming novice.
@@ -38,7 +42,9 @@ namespace Backend{
                 Preserve every supplied variable name and value exactly; do not redefine or replace them.
                 Use only Python built-ins. Do not import modules, call input(), or depend on external data.
                 Keep the solution appropriate for the requested difficulty and print a clear, human-readable result.
-                    -Do not include comments in your response
+                    - Do not include comments in your response
+                    - All responses should be more than one line, never just do print(var)
+                    - Never use in line statements, ie, new_scores = [score for score in scores if score>=80]
                 Ensure the script runs from top to bottom and prints at least one line.
 
                 ##OUTPUT##

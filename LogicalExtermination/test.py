@@ -1,3 +1,4 @@
-fruits = ['apple', 'banana', 'cherry']
-for fruit in fruits:
-    print(f'{fruit}: {len(fruit)}')
+word = 'butterfly'
+uppercase_word = word.upper()
+print('Original word:', word)
+print('Uppercase word:', uppercase_word)

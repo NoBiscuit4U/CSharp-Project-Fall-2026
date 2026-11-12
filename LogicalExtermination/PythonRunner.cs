@@ -42,6 +42,7 @@ namespace Backend{
                 blocks.Add(brick.code);
             }
 
+            Console.WriteLine(string.Join(Environment.NewLine,blocks));
             File.WriteAllText(Constants.PythonConstants.py_test_file,ProcessCode(blocks));
         }
 
