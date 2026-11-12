@@ -89,6 +89,7 @@ else
 
 @code {
     private static int difficulty {get; set; } = 0;
+    private static int health {get; set; } = 5;
     private PythonRunner pythonRunner=new PythonRunner();
     private OAIManager oai=null!;
     private StructuredResult output = null;
@@ -104,17 +105,27 @@ else
     private static String vars = "";
 
     protected override async Task OnInitializedAsync(){
-        MainLayout.updateColor();
+        MainLayout.updateDifColor();
         output=null;
         await GetTest();
     }
-
     public static int getDifficulty()
     {
         return difficulty;
     }
     public static void setDifficulty(int diff){
         difficulty = diff;
+    }
+    public static int getHealth()
+    {
+        return health;
+    }
+    public static void setHealth(int hp){
+        health = hp;
+    }
+    public static void damage()
+    {
+        health -= 1;
     }
     private async Task GetTest(){
         var oai = new OAIManager(Constants.OAIConstants.default_model,pythonRunner);

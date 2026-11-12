@@ -66,21 +66,21 @@ namespace Backend
                 if (name == 0) { vars = new List<string> {"a", "b"}; }
                 else if (name == 1) { vars = new List<string> {"x", "y"}; }
                 else if (name == 2) { vars = new List<string> {"i", "j"}; }
-                output = $"{vars[0]}, {vars[1]} = {rand.Next(1, 10)}, {rand.Next(1, 10)}";
+                output = $"{vars[0]} = {rand.Next(1, 10)}, {vars[1]} = {rand.Next(1, 10)}";
             }
             if (count == 4 || count == 5)
             {
                 if (name == 0) { vars = new List<string> {"a", "b", "c"}; }
                 else if (name == 1) { vars = new List<string> {"x", "y", "z"}; }
                 else if (name == 2) { vars = new List<string> {"f", "g", "h"}; }
-                output = $"{vars[0]}, {vars[1]}, {vars[2]} = {rand.Next(1, 10)}, {rand.Next(1, 10)}, {rand.Next(1, 10)}";
+                output = $"{vars[0]} = {rand.Next(1, 10)}, {vars[1]} = {rand.Next(1, 10)}, {vars[2]} = {rand.Next(1, 10)}";
             }
             if (count == 7)
             {
                 if (name == 0) { vars = new List<string> {"a", "b", "c", "d"}; }
                 else if (name == 1) { vars = new List<string> {"w", "x", "y", "z"}; }
                 else if (name == 2) { vars = new List<string> {"a", "b", "c", "d"}; }
-                output = $"{vars[0]}, {vars[1]}, {vars[2]}, {vars[3]} = {rand.Next(1, 10)}, {rand.Next(1, 10)}, {rand.Next(1, 10)}, {rand.Next(1, 10)}";
+                output = $"{vars[0]} = {rand.Next(1, 10)}, {vars[1]} = {rand.Next(1, 10)}, {vars[2]} = {rand.Next(1, 10)}, {vars[3]} = {rand.Next(1, 10)}";
             }
             return output;
         }
@@ -104,11 +104,11 @@ namespace Backend
             List<string> wordList = words();
             if (count == 2)
             {
-                output = $"word1, word2 = ['{wordList[rand.Next(0, 10)]}', '{wordList[rand.Next(0, 10)]}']";
+                output = $"word1 = ['{wordList[rand.Next(0, 10)]}', word2 ='{wordList[rand.Next(0, 10)]}']";
             }
             if (count == 3)
             {
-                output = $"word1, word2, word3 = ['{wordList[rand.Next(0, 10)]}', '{wordList[rand.Next(0, 10)]}', '{wordList[rand.Next(0, 10)]}']";
+                output = $"word1 = ['{wordList[rand.Next(0, 10)]}', word2 ='{wordList[rand.Next(0, 10)]}', word3 ='{wordList[rand.Next(0, 10)]}']";
             }
             return output;
         }

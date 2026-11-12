@@ -18,8 +18,8 @@
 <div class="segment">
     <div></div>
     <div class="text">
-        <p>Difficulty:</p>
-        <p style="color: @Color; font-size: 48px;">@Game.getDifficulty()</p>
+        <p>Health:</p>
+        <p style="color: @hpColor; font-size: 48px;">@Game.getHealth()</p>
     </div>
     <div></div>
     <div>
@@ -31,8 +31,10 @@
     </div>
     <div></div>
     <div></div>
-    <div></div>
-    <div></div>
+    <div class="text">
+        <p style="color: @difColor; font-size: 48px;">@Game.getDifficulty()</p>
+        <p>Difficulty:</p>
+    </div>
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>
@@ -42,21 +44,30 @@
 </div>
 
 @code{
-    static private string Color = "rgb(0, 200, 0)";
+    static private string difColor = "rgb(0, 200, 0)";
+    static private string hpColor = "rgb(0, 200, 0)";
     protected override async Task OnInitializedAsync()
     {
-        updateColor();
+        updateDifColor();
     }
-    public static void updateColor()
+    public static void updateDifColor()
     {
         int dif = Game.getDifficulty();
         int r = (255 * dif / 100);
         int g = (175 - (175 * dif / 100)) + 25;
         int b = (25 * dif / 100);
-        Color = $"rgb({r}, {g}, {b})";
+        difColor = $"rgb({r}, {g}, {b})";
+    }
+    public static void updateHpColor()
+    {
+        int hp = 5 - Game.getHealth();
+        int r = (255 * hp / 5);
+        int g = (175 - (175 * hp / 5)) + 25;
+        int b = (25 * hp / 5);
+        hpColor = $"rgb({r}, {g}, {b})";
     }
     public static string getColor()
     {
-        return Color;
+        return difColor;
     }
 }

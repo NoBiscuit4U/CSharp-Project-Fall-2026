@@ -1,4 +1,5 @@
 @page "/incorrect"
+@using System.Runtime.InteropServices
 @rendermode InteractiveServer
 @inject NavigationManager NavMan
 
@@ -32,13 +33,26 @@
     }
 </style>
 
-<div class="content">
+<div class="content", style="boarder= 1px solid @bColor">
     <h1 style="color: rgb(255, 25, 25)">Incorrect</h1>
     <button class="continue" @onclick="() => Again()">Try Again</button>
     <button class="goOn" @onclick="() => IncDiff()">Decrease Difficulty</button>
 </div>
 
 @code {
+    private string bColor = "rgb(255, 255, 255)";
+    protected override async Task OnInitializedAsync(){
+        await Task.Delay(500);
+        for (int t = 1; t <= 100; t++)
+        {
+            int g = ((235/100) * (100-t)) + 20;
+            int b = ((235/100) * (100-t)) + 20;
+            bColor = $"rgb(255, {g}, {b})";
+            Console.WriteLine(bColor);
+        }
+        Game.damage();
+        MainLayout.updateHpColor();
+    }
     private void Again()
     {
         NavMan.NavigateTo("/play");
@@ -47,7 +61,7 @@
     {
         if (Game.getDifficulty() > 5)
             Game.setDifficulty(Game.getDifficulty() - 5);
-            MainLayout.updateColor();
+            MainLayout.updateDifColor();
         NavMan.NavigateTo("/play");
     }
 }
