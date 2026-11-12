@@ -108,12 +108,12 @@ namespace Backend{
             return string.Join(Environment.NewLine,list);
         }
 
-        private List<string> GetInputs(int num){
-            return Constants.OAIConstants.static_var_val_string
-                .OrderBy(_ => Random.Shared.Next())
-                .Take(num)
-                .ToList();
-        }
+//        private List<string> GetInputs(int num){
+//            return Constants.OAIConstants.static_var_val_string
+//                .OrderBy(_ => Random.Shared.Next())
+//                .Take(num)
+//                .ToList();
+//        }
 
         private List<string> GetInputVariableNames(List<string> inputDefinitions){
             return inputDefinitions.Select(definition =>
@@ -298,7 +298,7 @@ namespace Backend{
     //        }
 
             Console.WriteLine($"[Agent workflow] Starting generation (difficulty {difficultyScore}/100).");
-            List<string> list_inputs=GetInputs(1);
+            List<string> list_inputs= new List<string> {Variables.GetVar()};//GetInputs(1);
             List<string> inputNames=GetInputVariableNames(list_inputs);
             string inputText=StringListToString(list_inputs);
             Console.WriteLine($"[Agent workflow] Selected input variables: {string.Join(", ",inputNames)}.");

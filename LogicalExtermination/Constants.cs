@@ -46,13 +46,13 @@ namespace Backend{
                 Return only the complete Python script in the Answer field.
                 Do not include markdown fences, explanations, or the problem statement.
             """;
-            public static List<string> static_var_val_string= new List<string>{
-                "word = 'butterfly'",
-                "fruits = ['apple', 'banana', 'cherry']",
-                "numbers = [12, 4, 19, 7, 3]",
-                "sentence = 'Learning Python is fun'",
-                "scores = [72, 85, 91, 64, 78]"
-            };
+//            public static List<string> static_var_val_string= new List<string>{
+//                "word = 'butterfly'",
+//                "fruits = ['apple', 'banana', 'cherry']",
+//                "numbers = [12, 4, 19, 7, 3]",
+//                "sentence = 'Learning Python is fun'",
+//                "scores = [72, 85, 91, 64, 78]"
+//            };
 
             public static string blank="___";
         }
