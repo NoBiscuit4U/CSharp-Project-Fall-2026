@@ -131,7 +131,14 @@ else
         var oai = new OAIManager(Constants.OAIConstants.default_model,pythonRunner);
         Console.WriteLine("Running...");
         output=null;
-        output = await oai.GetStructuredResult(difficulty); 
+        try{
+            output=await oai.GetStructuredResult(difficulty);
+        }catch(InvalidOperationException e){
+            while(output==null){
+                output=await oai.GetStructuredResult(difficulty);
+            }
+        }
+
         problem=output.Problem;
         completed_code=output.CompletedCode;
         codeblocks=output.Codeblocks;

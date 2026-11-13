@@ -45,6 +45,8 @@ namespace Backend{
                     - Do not include comments in your response
                     - All responses should be more than one line, never just do print(var)
                     - Never use in line statements, ie, new_scores = [score for score in scores if score>=80]
+                    - Never use x = 1, y = 2, z = 3, etc. in one line, always use separate lines for each variable assignment
+                        - This will always crash the program and is not allowed
                 Ensure the script runs from top to bottom and prints at least one line.
 
                 ##OUTPUT##

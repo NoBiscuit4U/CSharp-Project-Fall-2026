@@ -344,8 +344,8 @@ namespace Backend{
 
             string completedCode=BuildCompletedCode(list_inputs,generatedCode,inputNames);
             string terminalOutput="";
-            for(int attempt=0;attempt<3;attempt++){
-                Console.WriteLine($"[Agent workflow] Step 3/4: Running Python solution (attempt {attempt+1}/3).");
+            for(int attempt=0;attempt<5;attempt++){
+                Console.WriteLine($"[Agent workflow] Step 3/4: Running Python solution (attempt {attempt+1}/5).");
                 terminalOutput=await GetTerminalOutput(completedCode);
                 Console.WriteLine($"[Agent workflow] Python execution output: {terminalOutput}");
                 if(!string.IsNullOrWhiteSpace(terminalOutput) &&
@@ -353,9 +353,10 @@ namespace Backend{
                     Console.WriteLine("[Agent workflow] Python solution executed successfully.");
                     break;
                 }
-                if(attempt==2){
-                    Console.WriteLine("[Agent workflow] Python solution failed all three attempts.");
-                    throw new InvalidOperationException("The generated Python solution did not run successfully after three attempts.");
+
+                if(attempt==4){
+                    Console.WriteLine("[Agent workflow] Python solution failed all five attempts.");
+                    throw new InvalidOperationException("The generated Python solution did not run successfully after five attempts.");
                 }
 
                 Console.WriteLine("[Agent workflow] Asking the answer agent to fix the failed solution.");
