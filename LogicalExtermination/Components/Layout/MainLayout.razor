@@ -10,7 +10,11 @@
         line-height: 0.75;
         grid-column-start: 2;
         grid-column-end: 4;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 25px;
     }
+    
 </style>
 
 <PageTitle>Logical Extermination</PageTitle>
@@ -18,8 +22,14 @@
 <div class="segment">
     <div></div>
     <div class="text">
-        <p>Health:</p>
-        <p style="color: @hpColor; font-size: 48px;">@Game.getHealth()</p>
+        <div>
+            <p>Difficulty:</p>
+            <p style="color: @difColor; font-size: 48px;">@Game.getDifficulty()</p>
+        </div>
+        <div>
+            <p>Health:</p>
+            <p style="color: @hpColor; font-size: 48px;">@Game.getHealth()</p>
+        </div>
     </div>
     <div></div>
     <div>
@@ -31,10 +41,8 @@
     </div>
     <div></div>
     <div></div>
-    <div class="text">
-        <p style="color: @difColor; font-size: 48px;">@Game.getDifficulty()</p>
-        <p>Difficulty:</p>
-    </div>
+    <div></div>
+    <div></div>
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>
