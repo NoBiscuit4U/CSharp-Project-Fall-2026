@@ -41,24 +41,33 @@
 
 @code {
     private string bColor = "rgb(255, 255, 255)";
-    protected override async Task OnInitializedAsync(){
-        await Task.Delay(500);
-        for (int t = 1; t <= 100; t++)
-        {
-            int g = ((235/100) * (100-t)) + 20;
-            int b = ((235/100) * (100-t)) + 20;
-            bColor = $"rgb(255, {g}, {b})";
-            Console.WriteLine(bColor);
-        }
-        Game.damage();
-        MainLayout.updateHpColor();
-    }
+    //    protected override async Task OnInitializedAsync(){
+    //
+    //        await Task.Delay(500);
+    //        for (int t = 1; t <= 100; t++)
+    //        {
+    //            int g = ((235/100) * (100-t)) + 20;
+    //            int b = ((235/100) * (100-t)) + 20;
+    //            bColor = $"rgb(255, {g}, {b})";
+    //            Console.WriteLine(bColor);
+    //        }
+    //    }
     private void Again()
     {
-        NavMan.NavigateTo("/play");
+        Game.damage();
+        MainLayout.updateHpColor();
+        if (Game.getHealth() == 0) {
+            NavMan.NavigateTo("/");
+        }
+        else
+        {
+            NavMan.NavigateTo("/play");
+        }
     }
     private void IncDiff()
     {
+        Game.damage();
+        MainLayout.updateHpColor();
         if (Game.getDifficulty() > 5)
             Game.setDifficulty(Game.getDifficulty() - 5);
             MainLayout.updateDifColor();

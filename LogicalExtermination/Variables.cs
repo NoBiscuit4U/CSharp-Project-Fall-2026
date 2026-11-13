@@ -51,7 +51,7 @@ namespace Backend
         private static string GetNums()
         {
             string output = "";
-            int count = rand.Next(1, 7);
+            int count = rand.Next(1, 2); // should be (1, 7), but erroring
             int name = rand.Next(0, 3);
             List<string> vars = new List<string>();
             if (count == 1)
@@ -100,7 +100,7 @@ namespace Backend
         private static string GetWords()
         {
             string output = "";
-            int count = rand.Next(2, 4);
+            int count = rand.Next(2, 3); // should be (2, 4), but erroring
             List<string> wordList = words();
             if (count == 2)
             {

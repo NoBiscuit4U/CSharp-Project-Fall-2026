@@ -1,6 +1,4 @@
-input = [5, 1, 2]
-result = []
-for number in input:
-    if number > 2:
-        result.append(number)
-print(result)
+word = 'Monkey'
+first_letter = word[0]
+message = 'The first letter of the word is: ' + first_letter
+print(message)
