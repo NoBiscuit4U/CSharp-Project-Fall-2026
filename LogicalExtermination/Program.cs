@@ -2,8 +2,10 @@ using Backend;
 using LogicalExtermination.Components;
 
 var builder = WebApplication.CreateBuilder(args);
+GameMode GM = new GameMode();
 
 // Add services to the container.
+builder.Services.AddSingleton(GM);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 

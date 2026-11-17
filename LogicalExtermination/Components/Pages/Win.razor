@@ -18,7 +18,7 @@
         cursor: pointer;
     }.goOn {
         background-color: rgb(16, 16, 16);
-        color: @MainLayout.getColor();
+        color: @MainLayout.GetDifficultyColor(GM.difficulty);
         font-size: 24px;
         padding: 10px 20px; <!-- vertical, horizontal -->
         margin: 10px;
@@ -38,15 +38,16 @@
 </div>
 
 @code {
+    [Inject]
+    private Backend.GameMode GM { get; set; } = default!;
     private void Again()
     {
         NavMan.NavigateTo("/play");
     }
     private void IncDiff()
     {
-        if (Game.getDifficulty() < 100)
-            Game.setDifficulty(Game.getDifficulty() + 5);
-            MainLayout.updateDifColor();
+        if (GM.difficulty < 100)
+            GM.difficulty += 5;
         NavMan.NavigateTo("/play");
     }
 }

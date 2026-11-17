@@ -33,12 +33,12 @@
 </div>
 
 @code {
+    [Inject]
+    private Backend.GameMode GM { get; set; } = default!;
     private void StartGame(int difficulty, int health)
     {
-        Game.setDifficulty(difficulty);
-        Game.setHealth(health);
-        MainLayout.updateDifColor();
-        MainLayout.updateHpColor();
+        GM.difficulty = difficulty;
+        GM.health = health;
         NavMan.NavigateTo("/play");
     }
 }

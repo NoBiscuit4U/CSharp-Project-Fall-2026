@@ -299,7 +299,7 @@ namespace Backend{
     //        }
 
             Console.WriteLine($"[Agent workflow] Starting generation (difficulty {difficultyScore}/100).");
-            String gotVars = Variables.GetVar();
+            String gotVars = Variables.GetVar(difficultyScore);
             LogicalExtermination.Components.Pages.Game.setVars(gotVars);
             List<string> list_inputs= new List<string> {gotVars};//GetInputs(1);
             List<string> inputNames=GetInputVariableNames(list_inputs);

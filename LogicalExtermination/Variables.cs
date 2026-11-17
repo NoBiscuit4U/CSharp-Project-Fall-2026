@@ -7,9 +7,8 @@ namespace Backend
     public class Variables
     {
         private static Random rand = new Random();
-        public static string GetVar()
+        public static string GetVar(int dif)
         {
-            int dif = Game.getDifficulty();
             int scale = (int)MathF.Ceiling(dif / 10.0f);
             String output = "";
             int type = rand.Next(0, 5 + scale); //Range from 0,6 - 0,16 

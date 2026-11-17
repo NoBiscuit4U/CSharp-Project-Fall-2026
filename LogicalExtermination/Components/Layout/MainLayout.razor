@@ -24,11 +24,11 @@
     <div class="text">
         <div>
             <p>Difficulty:</p>
-            <p style="color: @difColor; font-size: 48px;">@Game.getDifficulty()</p>
+            <p style="color: @GetDifficultyColor(GM.difficulty); font-size: 48px;">@GM.difficulty</p>
         </div>
         <div>
             <p>Health:</p>
-            <p style="color: @hpColor; font-size: 48px;">@Game.getHealth()</p>
+            <p style="color: @GetHealthColor(GM.health); font-size: 48px;">@GM.health</p>
         </div>
     </div>
     <div></div>
@@ -52,30 +52,23 @@
 </div>
 
 @code{
-    static private string difColor = "rgb(0, 200, 0)";
-    static private string hpColor = "rgb(0, 200, 0)";
-    protected override async Task OnInitializedAsync()
+    [Inject]
+    private Backend.GameMode GM { get; set; } = default!;
+
+    public static string GetDifficultyColor(int difficulty)
     {
-        updateDifColor();
+        int r = (255 * difficulty / 100);
+        int g = (175 - (175 * difficulty / 100)) + 25;
+        int b = (25 * difficulty / 100);
+        return $"rgb({r}, {g}, {b})";
     }
-    public static void updateDifColor()
+
+    private static string GetHealthColor(int health)
     {
-        int dif = Game.getDifficulty();
-        int r = (255 * dif / 100);
-        int g = (175 - (175 * dif / 100)) + 25;
-        int b = (25 * dif / 100);
-        difColor = $"rgb({r}, {g}, {b})";
-    }
-    public static void updateHpColor()
-    {
-        int hp = 5 - Game.getHealth();
+        int hp = 5 - health;
         int r = (255 * hp / 5);
         int g = (175 - (175 * hp / 5)) + 25;
         int b = (25 * hp / 5);
-        hpColor = $"rgb({r}, {g}, {b})";
-    }
-    public static string getColor()
-    {
-        return difColor;
+        return $"rgb({r}, {g}, {b})";
     }
 }

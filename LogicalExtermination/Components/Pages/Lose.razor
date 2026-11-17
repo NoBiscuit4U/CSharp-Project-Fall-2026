@@ -19,7 +19,7 @@
         cursor: pointer;
     }.goOn {
         background-color: rgb(16, 16, 16);
-        color: @MainLayout.getColor();
+        color: @MainLayout.GetDifficultyColor(GM.difficulty);
         font-size: 24px;
         padding: 10px 20px; <!-- vertical, horizontal -->
         margin: 10px;
@@ -40,6 +40,8 @@
 </div>
 
 @code {
+    [Inject]
+    private Backend.GameMode GM { get; set; } = default!;
     private string bColor = "rgb(255, 255, 255)";
     //    protected override async Task OnInitializedAsync(){
     //
@@ -54,9 +56,8 @@
     //    }
     private void Again()
     {
-        Game.damage();
-        MainLayout.updateHpColor();
-        if (Game.getHealth() == 0) {
+        GM.damage();
+        if (GM.health == 0) {
             NavMan.NavigateTo("/");
         }
         else
@@ -66,11 +67,9 @@
     }
     private void IncDiff()
     {
-        Game.damage();
-        MainLayout.updateHpColor();
-        if (Game.getDifficulty() > 5)
-            Game.setDifficulty(Game.getDifficulty() - 5);
-            MainLayout.updateDifColor();
+        GM.difficulty -= 5;
+        if (GM.difficulty > 5)
+            GM.difficulty -= 5;
         NavMan.NavigateTo("/play");
     }
 }

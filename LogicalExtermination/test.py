@@ -1,4 +1,4 @@
-word = 'Monkey'
-first_letter = word[0]
-message = 'The first letter of the word is: ' + first_letter
-print(message)
+x = 5
+result = x * x
+output = f'The square of x is {result}'
+print(output)
