@@ -16,14 +16,17 @@ else
     <div class="AnswerArea">
         <div></div>
         <div class="AnswerSpace">
-            <div class="AnswerBlock">
-                <div></div>
-                <div></div>
-                <div class="AnswerPiece">
-                    <p>@vars</p>
+            @for (int h = 0; h < vars.Count; h++)
+            {
+                <div class="AnswerBlock">
+                    <div></div>
+                    <div></div>
+                    <div class="AnswerPiece">
+                        <p>@vars[h]</p>
+                    </div>
+                    <div></div>
                 </div>
-                <div></div>
-            </div>
+            }
             @for (int i = 0; i < activeBricks.Count; i++)
             {
                 int index = i;
@@ -90,7 +93,7 @@ else
     private GameMode GM { get; set; } = default!;
     private List<CodeBrick> inactiveBricks = new List<CodeBrick>();
     private List<CodeBrick> activeBricks = new List<CodeBrick>();
-    private static String vars = "";
+    private static List<String> vars = new List<String>();
 
     protected override async Task OnInitializedAsync(){
         inactiveBricks = new List<CodeBrick>();
@@ -152,7 +155,7 @@ else
             NavMan.NavigateTo("/incorrect");
         }
     }
-    public static void setVars(String v)
+    public static void setVars(List<String> v)
     {
         vars = v;
     }

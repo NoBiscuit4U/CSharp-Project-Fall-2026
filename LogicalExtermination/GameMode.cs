@@ -26,7 +26,7 @@ namespace Backend
         }
         public async Task GetTest(){
             Console.WriteLine("GetTest() Started");
-            var oai = new OAIManager(Constants.OAIConstants.default_model,pythonRunner);
+            var oai = new OAIManager(pythonRunner);
             Console.WriteLine("Running...");
             resultQ=null;
             try{

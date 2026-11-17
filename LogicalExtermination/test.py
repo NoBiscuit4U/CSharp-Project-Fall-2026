@@ -1,4 +1,5 @@
-x = 5
-result = x * x
-output = f'The square of x is {result}'
-print(output)
+a = 3
+b = 9
+prod = a * b
+print("Calculating the product of a and b:")
+print("a =", a, "b =", b, "-> product =", prod)
