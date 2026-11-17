@@ -128,7 +128,7 @@ else
         health -= 1;
     }
     private async Task GetTest(){
-        var oai = new OAIManager(Constants.OAIConstants.default_model,pythonRunner);
+        var oai = new OAIManager(pythonRunner);
         Console.WriteLine("Running...");
         output=null;
         try{
@@ -196,8 +196,8 @@ else
             NavMan.NavigateTo("/incorrect");
         }
     }
-    public static void setVars(String v)
+    public static void setVars(List<string> v)
     {
-        vars = v;
+        vars = string.Join(",",v);
     }
 }

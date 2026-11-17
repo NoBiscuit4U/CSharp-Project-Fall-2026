@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -6,6 +7,8 @@ using IronPython.Runtime.Operations;
 using Microsoft.Agents.AI;
 using Microsoft.AspNetCore.Components.Infrastructure;
 using Microsoft.Extensions.AI;
+using Microsoft.Scripting.Utils;
+using OpenAI;
 using OpenAI.Chat;
 
 public record StructuredResult(){
@@ -14,7 +17,9 @@ public record StructuredResult(){
     public required string CompletedCode {get;set;}=null!;
     public required List<string> Variables {get;set;}=null!;
     public required string TerminalOutput {get;set;}=null!;
+    public required List<string> IncorrectCodeBlocks {get;set;}=null!;
 }
+
 public record BlockVariableResponse(){
     public required List<string> CodeBlocks {get;set;}=null!;
     public required List<string> Variables {get;set;}=null!;
@@ -64,10 +69,14 @@ namespace Backend{
         private readonly ProcessResponse processResponse;
         private PythonRunner pythonRunner;
 
-        private readonly AIAgent problem_agent;
-        private readonly AIAgent answer_agent;
+        private AIAgent problem_agent;
+        private AIAgent answer_agent;
 
-        public OAIManager(string Model,PythonRunner pythonRunner){
+        private Random rand=new Random();
+
+        private readonly OpenAIClient openAiClient;
+
+        public OAIManager(PythonRunner pythonRunner){
             this.pythonRunner=pythonRunner;
 
             DotNetEnv.Env.TraversePath().Load();
@@ -75,14 +84,6 @@ namespace Backend{
             if(string.IsNullOrWhiteSpace(apiKey)){
                 throw new InvalidOperationException("The OPENAI_API_KEY environment variable is not set.");
             }
-            IChatClient chatClient=new ChatClient(Model,apiKey).AsIChatClient();
-
-            answer_agent=chatClient.AsAIAgent(
-                    instructions:Constants.OAIConstants.answer_agent_instructions,
-                    name:"Answer Agent");
-            problem_agent=chatClient.AsAIAgent(
-                    instructions:Constants.OAIConstants.problem_agent_instructions,
-                    name:"Problem Agent");
 
             processResponse=response =>{
                 response.Problem ??= "Error Occurred";
@@ -92,6 +93,20 @@ namespace Backend{
                 response.TerminalOutput ??= "Error Occurred";
                 return response;
             };
+
+            openAiClient=new OpenAIClient(apiKey);
+
+            IChatClient chatClient= openAiClient.GetChatClient(Constants.OAIConstants.default_model).AsIChatClient();
+
+            problem_agent=chatClient.AsAIAgent(
+                instructions:Constants.OAIConstants.problem_agent_instructions,
+                name:"Problem Agent");
+
+            problem_agent=chatClient.AsAIAgent(
+                instructions:Constants.OAIConstants.adversarial_agent_instructions,
+                name:"Adversarial Agent");
+
+            InstantiateAgents();
 
             processResponse+=response =>{
                 Random.Shared.Shuffle(CollectionsMarshal.AsSpan(response.Codeblocks));
@@ -103,6 +118,16 @@ namespace Backend{
                 }
                 return response;
             };
+        }
+
+        private void InstantiateAgents(){
+            List<string> model_list=Constants.OAIConstants.model_select_list;
+
+            IChatClient chatClient= openAiClient.GetChatClient(model_list.ElementAt(rand.Next(0,model_list.Count))).AsIChatClient();
+            
+            answer_agent=chatClient.AsAIAgent(
+                    instructions:Constants.OAIConstants.answer_agent_instructions,
+                    name:"Answer Agent");
         }
 
         private string StringListToString(List<string> list){
@@ -297,11 +322,12 @@ namespace Backend{
 //            if(difficultyScore is < 0 or > 100){
   //              throw new ArgumentOutOfRangeException(nameof(difficultyScore),"Difficulty score must be between 0 and 100.");
     //        }
+            InstantiateAgents();
 
             Console.WriteLine($"[Agent workflow] Starting generation (difficulty {difficultyScore}/100).");
-            String gotVars = Variables.GetVar();
+            List<string> gotVars = Variables.GetVar();
             LogicalExtermination.Components.Pages.Game.setVars(gotVars);
-            List<string> list_inputs= new List<string> {gotVars};//GetInputs(1);
+            List<string> list_inputs=gotVars;//GetInputs(1);
             List<string> inputNames=GetInputVariableNames(list_inputs);
             string inputText=StringListToString(list_inputs);
             Console.WriteLine($"[Agent workflow] Selected input variables: {string.Join(", ",inputNames)}.");
@@ -386,7 +412,8 @@ namespace Backend{
                 Codeblocks=blockResponse.CodeBlocks,
                 CompletedCode=completedCode,
                 Variables=blockResponse.Variables,
-                TerminalOutput=terminalOutput
+                TerminalOutput=terminalOutput,
+                IncorrectCodeBlocks=new List<string>()
             };
 
             Console.WriteLine("[Agent workflow] Shuffling blocks and returning structured result.");
@@ -404,7 +431,8 @@ namespace Backend{
                 },
                 CompletedCode = "for fruit in input_list:\nprint(fruit)",
                 Variables = new List<string> { "input_list" },
-                TerminalOutput = "apple banana cherry"
+                TerminalOutput = "apple banana cherry",
+                IncorrectCodeBlocks=new List<string>(){""}
             };
 
             BlockVariableResponse blocks=GenerateBlockVariableResponse(result.CompletedCode,result.Variables);

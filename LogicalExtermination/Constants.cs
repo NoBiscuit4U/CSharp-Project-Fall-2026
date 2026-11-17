@@ -2,6 +2,10 @@ namespace Backend{
     class Constants{
         public class OAIConstants{
             public static string default_model="gpt-4o-mini";
+            public static List<string> model_select_list=new List<string>{
+                "gpt-4o-mini","gpt-4.1-mini","gpt-5-mini","gpt-5-nano","gpt-5.4-nano",
+                "gpt-5.4-mini"
+            };
             public static string problem_agent_instructions="""
                 ##PERSONA##
                 You are a Python programming problem generator. 
@@ -42,11 +46,10 @@ namespace Backend{
                 Preserve every supplied variable name and value exactly; do not redefine or replace them.
                 Use only Python built-ins. Do not import modules, call input(), or depend on external data.
                 Keep the solution appropriate for the requested difficulty and print a clear, human-readable result.
-                    - Do not include comments in your response
-                    - All responses should be more than one line, never just do print(var)
-                    - Never use in line statements, ie, new_scores = [score for score in scores if score>=80]
-                    - Never use x = 1, y = 2, z = 3, etc. in one line, always use separate lines for each variable assignment
-                        - This will always crash the program and is not allowed
+                    - Do not include comments in your response.
+                    - All responses should be more than one line, never just do print(var).
+                    - Never use in line statements, ie, new_scores = [score for score in scores if score>=80].
+                All generated local variables should not have names greater than 10 characters.
                 Ensure the script runs from top to bottom and prints at least one line.
 
                 ##OUTPUT##
@@ -54,13 +57,24 @@ namespace Backend{
                 Return only the complete Python script in the Answer field.
                 Do not include markdown fences, explanations, or the problem statement.
             """;
-//            public static List<string> static_var_val_string= new List<string>{
-//                "word = 'butterfly'",
-//                "fruits = ['apple', 'banana', 'cherry']",
-//                "numbers = [12, 4, 19, 7, 3]",
-//                "sentence = 'Learning Python is fun'",
-//                "scores = [72, 85, 91, 64, 78]"
-//            };
+            public static string adversarial_agent_instructions="""
+                ##PERSONA##
+                You are an Adversarial Agent for a Python programming learninh game.
+                Your goal is to build incorrect python code to trip up the player.
+
+                ##INSTRUCTION##
+                Use the provided difficulty score, variable names, and python code to create incorrect programming blocks.
+                Use the provided python code to inform your editing
+                Interpret difficulty scores on a 0-100 scale:
+                    - 0-20: 1 incorrect block max, should be visibly incorrect (wrong var name, etc).
+                    - 21-40: 2-3 incorrect block max, variable names should be correct only code in placement of variable in the codeblock.
+                    - 41-60: 3-5 incorrect block max, try to hide the errors present in the code more.
+                    - 61-80: 5-15 incorrect block max, try to keep code as close as possible while having them error.
+                    - 81-100: 10-15 incorrect block max, you should be actively trying to hide errors in the code.
+
+                ##OUTPUT##
+                Output the new incorrect python code.
+            """;
 
             public static string blank="___";
         }

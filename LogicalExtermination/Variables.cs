@@ -7,11 +7,11 @@ namespace Backend
     public class Variables
     {
         private static Random rand = new Random();
-        public static string GetVar()
+        public static List<string> GetVar()
         {
             int dif = Game.getDifficulty();
             int scale = (int)MathF.Ceiling(dif / 10.0f);
-            String output = "";
+            List<string> output = new List<string>();
             int type = rand.Next(0, 5 + scale); //Range from 0,6 - 0,16 
             if (type < 2) { output = GetWord(); }
             else if (type >= 2 && type < 6) { output = GetNums(); }
@@ -43,15 +43,14 @@ namespace Backend
             }
             return output;
         }
-        private static string GetWord()
+        private static List<string> GetWord()
         {
-            string output = $"word = '{words()[rand.Next(0, 10)]}'";
-            return output;
+           return new List<string>(){words().ElementAt(rand.Next(0, 10))};
         }
-        private static string GetNums()
+        private static List<string> GetNums()
         {
-            string output = "";
-            int count = rand.Next(1, 2); // should be (1, 7), but erroring
+            List<string> output = new List<string>();
+            int count = rand.Next(1, 7); // should be (1, 7), but erroring
             int name = rand.Next(0, 3);
             List<string> vars = new List<string>();
             if (count == 1)
@@ -59,34 +58,40 @@ namespace Backend
                 if (name == 0) { vars = new List<string> {"a"}; }
                 else if (name == 1) { vars = new List<string> {"x"}; }
                 else if (name == 2) { vars = new List<string> {"n"}; }
-                output = $"{vars[0]} = {rand.Next(1, 10)}";
+                output.Add($"{vars[0]} = {rand.Next(1, 10)}");
             }
             if (count == 2 || count == 3)
             {
                 if (name == 0) { vars = new List<string> {"a", "b"}; }
                 else if (name == 1) { vars = new List<string> {"x", "y"}; }
                 else if (name == 2) { vars = new List<string> {"i", "j"}; }
-                output = $"{vars[0]} = {rand.Next(1, 10)}, {vars[1]} = {rand.Next(1, 10)}";
+                output.Add($"{vars[0]} = {rand.Next(1, 10)}");
+                output.Add($"{vars[1]} = {rand.Next(1, 10)}");
             }
             if (count == 4 || count == 5)
             {
                 if (name == 0) { vars = new List<string> {"a", "b", "c"}; }
                 else if (name == 1) { vars = new List<string> {"x", "y", "z"}; }
                 else if (name == 2) { vars = new List<string> {"f", "g", "h"}; }
-                output = $"{vars[0]} = {rand.Next(1, 10)}, {vars[1]} = {rand.Next(1, 10)}, {vars[2]} = {rand.Next(1, 10)}";
+                output.Add($"{vars[0]} = {rand.Next(1, 10)}");
+                output.Add($"{vars[1]} = {rand.Next(1, 10)}");
+                output.Add($"{vars[2]} = {rand.Next(1, 10)}");
             }
             if (count == 7)
             {
                 if (name == 0) { vars = new List<string> {"a", "b", "c", "d"}; }
                 else if (name == 1) { vars = new List<string> {"w", "x", "y", "z"}; }
                 else if (name == 2) { vars = new List<string> {"a", "b", "c", "d"}; }
-                output = $"{vars[0]} = {rand.Next(1, 10)}, {vars[1]} = {rand.Next(1, 10)}, {vars[2]} = {rand.Next(1, 10)}, {vars[3]} = {rand.Next(1, 10)}";
+                output.Add($"{vars[0]} = {rand.Next(1, 10)}");
+                output.Add($"{vars[1]} = {rand.Next(1, 10)}");
+                output.Add($"{vars[2]} = {rand.Next(1, 10)}");
+                output.Add($"{vars[3]} = {rand.Next(1, 10)}");
             }
             return output;
         }
-        private static string GetNumList()
+        private static List<string>  GetNumList()
         {
-            String output = "input = [";
+            string output = "input = [";
             int count = rand.Next(2, 6);
             for (int i = 0; i < count; i++)
             {
@@ -95,26 +100,29 @@ namespace Backend
                 if (i < count - 1) { output += ", "; }
             }
             output += "]";
-            return output;
+            return new List<string>(){output};
         }
-        private static string GetWords()
+        private static List<string> GetWords()
         {
-            string output = "";
+            List<string> output = new List<string>();
             int count = rand.Next(2, 3); // should be (2, 4), but erroring
             List<string> wordList = words();
             if (count == 2)
             {
-                output = $"word1 = ['{wordList[rand.Next(0, 10)]}', word2 ='{wordList[rand.Next(0, 10)]}']";
+                output.Add($"word1 = ['{wordList[rand.Next(0, 10)]}'");
+                output.Add($"word2 = ['{wordList[rand.Next(0, 10)]}'");
             }
             if (count == 3)
             {
-                output = $"word1 = ['{wordList[rand.Next(0, 10)]}', word2 ='{wordList[rand.Next(0, 10)]}', word3 ='{wordList[rand.Next(0, 10)]}']";
+                output.Add($"word1 = ['{wordList[rand.Next(0, 10)]}'");
+                output.Add($"word2 = ['{wordList[rand.Next(0, 10)]}'");
+                output.Add($"word3 = ['{wordList[rand.Next(0, 10)]}'");
             }
             return output;
         }
-        private static string GetBigNumList()
+        private static List<string> GetBigNumList()
         {
-            String output = "input = [";
+            string output = "input = [";
             int count = rand.Next(2, 6);
             int type = rand.Next(0, 2);
             if (type == 0)
@@ -136,9 +144,9 @@ namespace Backend
                 }
             }
             output += "]";
-            return output;
+            return new List<string>(){output};
         }
-        private static string GetWordList()
+        private static List<string> GetWordList()
         {
             string output = "input = [";
             int count = rand.Next(2, 5);
@@ -149,9 +157,9 @@ namespace Backend
                 if (i < count - 1) { output += ", "; }
             }
             output += "]";
-            return output;
+            return new List<string>{output};
         }
-        private static string GetPhrase()
+        private static List<string> GetPhrase()
         {
             int type = rand.Next(0, 4);
             string output = "";
@@ -159,7 +167,7 @@ namespace Backend
             if (type == 1) { output = "sentence = 'Today is going to be a great day.'"; }
             if (type == 2) { output = "sentence = 'No, I am your father.'"; }
             if (type == 3) { output = "sentence = 'Don't worry, AI won't take over.'"; }
-            return output;
+            return new List<string>(){output};
         }
         private static string GetDictionary()
         {
